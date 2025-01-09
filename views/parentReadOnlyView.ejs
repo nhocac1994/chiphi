@@ -1,0 +1,94 @@
+<!-- views/parentReadOnlyView.ejs -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi Tiết Bảng Cha (Read-Only)</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Các kiểu bổ sung nếu cần */
+    #imagePreview {
+      position: absolute;
+      max-width: 300px;
+      max-height: 300px;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 1000;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    #imagePreview.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Báo cáo chi phí đi lại</h1>
+
+  <div class="parent-details">
+    <p><strong>Từ ngày:</strong> 
+      <%= ("0" + parent.ngayBatDau.getDate()).slice(-2) %>/
+      <%= ("0" + (parent.ngayBatDau.getMonth() + 1)).slice(-2) %>/
+      <%= parent.ngayBatDau.getFullYear() %>
+    </p>
+    <p><strong>Đến ngày:</strong> 
+      <% if (parent.ngayKetThuc) { %>
+        <%= ("0" + parent.ngayKetThuc.getDate()).slice(-2) %>/
+        <%= ("0" + (parent.ngayKetThuc.getMonth() + 1)).slice(-2) %>/
+        <%= parent.ngayKetThuc.getFullYear() %>
+      <% } else { %>
+        Chưa xác định
+      <% } %>
+    </p>
+  </div>
+
+  <div class="child-expenses">
+    <% if (children.length > 0) { %>
+      <table class="child-table" id="childTable">
+        <thead>
+          <tr>
+            <th>Ngày Tháng</th>
+            <th>Nội Dung</th>
+            <th>Giá Tiền</th>
+            <th>Địa Điểm</th>
+            <th>Ghi Chú</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% 
+          let totalAmount = 0; // Khởi tạo tổng tiền
+          children.forEach(child => { 
+            totalAmount += child.giaTien; // Cộng giaTien vào tổng
+          %>
+            <tr data-hinh-anh="<%= child.hinhAnh %>">
+              <td>
+                <%= ("0" + child.ngayThang.getDate()).slice(-2) %>/
+                <%= ("0" + (child.ngayThang.getMonth() + 1)).slice(-2) %>/
+                <%= child.ngayThang.getFullYear() %>
+              </td>
+              <td><%= child.noiDung %></td>
+              <td><%= child.giaTien.toLocaleString('vi-VN') %> VND</td>
+              <td><%= child.diaDiem %></td>
+              <td><%= child.ghiChu %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <!-- Hiển thị tổng tiền -->
+      <div class="total-amount">
+        <p>Tổng Tiền: <%= totalAmount.toLocaleString('vi-VN') %> VND</p>
+      </div>
+    <% } else { %>
+      <p>Không có chi phí nào thuộc bảng cha này.</p>
+    <% } %>
+    
+  </div>
+
+  <!-- Thẻ hình ảnh duy nhất để hiển thị khi hover -->
+  <img id="imagePreview" src="" alt="Hình ảnh chi tiết">
+
+  <script src="/scriptReadOnly.js"></script>
+</body>
+</html>

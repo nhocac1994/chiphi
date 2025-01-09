@@ -1,0 +1,388 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #444;
+}
+
+.content button {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 50px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+table tr:hover{
+  background-color:rgb(128, 151, 174);
+}
+
+.hidden {
+  display: none !important; /* Ensure this overrides any conflicting styles */
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal .modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  width: 500px;
+  position: relative;
+}
+
+
+/* Fullscreen Modal */
+.modal-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8); /* Nền mờ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-fullscreen .modal-content {
+  background-color: #fff;
+  width: 95%; /* Gần toàn màn hình theo chiều ngang */
+  height: 95%; /* Gần toàn màn hình theo chiều dọc */
+  border-radius: 8px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Table Inside Modal */
+.modal-fullscreen table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  flex-grow: 1; /* Đảm bảo table chiếm toàn bộ không gian */
+}
+
+.modal-fullscreen th,
+.modal-fullscreen td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.modal-fullscreen th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* Close Button */
+.modal-fullscreen .close {
+  position: absolute;
+  top: 20px;
+  right: 50px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+}
+
+.modal-fullscreen .close:hover {
+  color: red;
+}
+
+
+/* Nội dung modal */
+.modal-content-upload {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px; /* Giới hạn chiều rộng */
+  position: relative;
+  animation: slideDown 0.3s ease-out; /* Hiệu ứng hiển thị */
+}
+
+/* Nút đóng */
+
+
+/* Tiêu đề */
+.modal-content-upload h2 {
+  margin-top: 0;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+/* Form styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+form input,
+form button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+/* Hiệu ứng hiển thị modal */
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modal-content-upload {
+    width: 95%;
+    padding: 15px;
+  }
+
+  form input,
+  form button {
+    font-size: 14px;
+  }
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: red;
+  }
+  .modal-fullscreen .close {
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+  }
+}
+
+#childCards{
+  display: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #childTable{
+    display: none;
+  }
+
+  .card {
+    display: fixed;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .modal .modal-content {
+    width: 100%;
+  }
+  #childCards{
+    display: block;
+  }
+}
+
+/* Table Inside Modal */
+.modal-fullscreen table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modal-fullscreen th,
+.modal-fullscreen td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.modal-fullscreen th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* public/styles.css */
+
+#imagePreview {
+  transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+  opacity: 0;
+}
+
+#imagePreview[style*="display: block"] {
+  opacity: 1;
+}
+
+
+/* Container for cards */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Individual Card */
+.card {
+  width: calc(100% - 20px); /* Adjust width for responsiveness */
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  background-color: #fff;
+  position: relative;
+  transition: all 0.3s ease; /* Smooth transition for expanding */
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02); /* Slightly enlarge card on hover */
+}
+
+/* Card header (date and location) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.card-header .date {
+  font-weight: bold;
+}
+
+.card-header .location {
+  font-style: italic;
+}
+
+/* Card content */
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.card-content .content {
+  flex: 1;
+  font-weight: 500;
+}
+
+.card-content .price {
+  color: #007BFF;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* Card details (hidden by default) */
+.card-details {
+  display: none;
+  margin-top: 10px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.card-details .note {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.card-details img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

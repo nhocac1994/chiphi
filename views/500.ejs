@@ -1,0 +1,17 @@
+<!-- views/500.ejs -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>500 - Lỗi Máy Chủ</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>❌ 500 - Lỗi Máy Chủ</h1>
+  <p>Đã xảy ra lỗi trên máy chủ.</p>
+  <% if (error) { %>
+    <pre><%= error.stack %></pre>
+  <% } %>
+  <a href="/">🔙 Trở về Trang Chủ</a>
+</body>
+</html>
