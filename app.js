@@ -11,6 +11,7 @@ const parentExpenseRoutes = require("./routes/parentExpenseRoutes");
 const childExpenseRoutes = require("./routes/childExpenseRoutes");
 const uploadImageRoutes = require("./routes/uploadImageRoutes");
 const viewRoutes = require("./routes/viewRoutes");
+const serverless = require("serverless-http");
 
 const app = express();
 
@@ -61,6 +62,10 @@ app.use((err, req, res, next) => {
   console.error("Lỗi toàn cục:", err.stack);
   res.status(500).json({ message: "Internal server error." });
 });
+
+// Xuất Express app cho Vercel
+module.exports = app;
+module.exports.handler = serverless(app);
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
