@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
             // Kiểm tra nếu hình ảnh vượt ra ngoài phía dưới màn hình
             if (topPosition + imageHeight > scrollTop + viewportHeight) {
-              topPosition = rect.top + scrollTop - imageHeight - 30; // Đặt phía trên hàng
+              topPosition = rect.top + scrollTop - imageHeight - 300; // Đặt phía trên hàng
             }
   
             // Đặt vị trí của hình ảnh
