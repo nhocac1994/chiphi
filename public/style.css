@@ -8,6 +8,20 @@ body {
   color: #2c3e50;  /* màu chữ đậm hơn */
 }
 
+body {
+  touch-action: pan-y pinch-zoom; /* Chỉ cho phép cuộn dọc */
+}
+
+/* Ngăn chặn việc chọn text */
+* {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version */
+}
+
 /* Thêm overlay mờ để tăng độ sâu */
 body::before {
   content: '';
