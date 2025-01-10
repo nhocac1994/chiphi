@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const viewportWidth = window.innerWidth;
   
             // Tính toán vị trí đặt hình ảnh bên dưới hàng, cách 10px
-            let topPosition = rect.bottom + scrollTop + 10;
+            let topPosition = rect.bottom + scrollTop + 5;
             let leftPosition = rect.left + scrollLeft;
   
             // Kiểm tra nếu hình ảnh vượt ra ngoài phía phải màn hình
