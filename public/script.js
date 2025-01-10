@@ -1,6 +1,7 @@
 // public/script.js
 
-const apiBaseUrl = "https://chiphidilai.vercel.app/api";
+// const apiBaseUrl = "https://chiphidilai.vercel.app/api";
+const apiBaseUrl = "http://localhost:3000/api";
 
 // Các biến trạng thái
 let isEditingChild = false;
@@ -497,17 +498,16 @@ childForm.addEventListener("submit", async (e) => {
       formData.append("childId", isEditingChild && currentChildId ? currentChildId : data._id); // ID của chi phí con
 
       try {
-        // Gửi yêu cầu tới API upload-image
         const uploadResponse = await fetch(`${apiBaseUrl}/upload-image`, {
           method: "POST",
           body: formData, // Gửi dữ liệu FormData
         });
-
+      
         if (uploadResponse.ok) {
           const uploadData = await uploadResponse.json();
           alert("Hình ảnh đã được tải lên thành công!");
           console.log("Hình ảnh đã tải lên:", uploadData.hinhAnh);
-
+      
           // Tải lại giao diện để hiển thị hình ảnh đã cập nhật
           showChildView(parentId);
         } else {
@@ -518,6 +518,7 @@ childForm.addEventListener("submit", async (e) => {
         console.error("Lỗi khi tải hình ảnh:", error);
         alert("Lỗi khi xử lý hình ảnh.");
       }
+      
     }
 
 
