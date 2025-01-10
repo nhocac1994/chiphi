@@ -42,8 +42,8 @@ app.use("/api/upload-image", uploadImageRoutes);
 app.use("/", viewRoutes); // Đảm bảo rằng viewRoutes đã được nhập khẩu
 
 // Route cho /index.html
-app.get("/index.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get("/chiphi.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "chiphi.html"));
 });
 
 // Route gốc / để trả về hello.html
