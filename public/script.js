@@ -97,6 +97,10 @@ const fetchParentExpenses = async () => {
         </td>
       </tr>
     `).join("");
+    // Gắn sự kiện click cho từng dòng bảng cha
+    document.querySelectorAll("tr[data-id]").forEach(item => {
+      item.addEventListener("click", () => showChildView(item.dataset.id));
+    });
 
     // Gắn sự kiện click cho từng nút chia sẻ
     document.querySelectorAll(".share-btn").forEach(button => {
