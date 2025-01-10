@@ -170,8 +170,8 @@ const showChildView = async (parentId) => {
         <td>${child.ghiChu || "Không có"}</td>
         <td>
           <div class="card-actions">
-            <button class="edit-btn" data-id="${child._id}">Sửa</button>
-            <button class="delete-btn" data-id="${child._id}">Xóa</button>
+            <button class="edit-btn" data-id="${child._id}"><i class="bi bi-pencil-square"></i></button>
+            <button class="delete-btn" data-id="${child._id}"><i class="bi bi-trash"></i></button>
           </div>
         </td>
       </tr>
