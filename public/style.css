@@ -397,6 +397,37 @@ form button:hover {
   margin-top: 10px;
 }
 /* CSS cho phần đăng nhập */
+.modal-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #6a11cb;
+  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  z-index: 1000;
+}
+
+.modal-login-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 400px; /* Giới hạn chiều rộng tối đa */
+  padding: 20px;
+  text-align: center;
+}
+
+.modal-content header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
 #loginForm {
   display: flex;
   flex-direction: column;
@@ -493,13 +524,3 @@ form button:hover {
 .share-btn:hover {
   background-color: #218838; /* Màu khi hover */
 }
-.gradient-custom {
-  /* fallback for old browsers */
-  background: #6a11cb;
-  
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-  
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
-  }
