@@ -1,4 +1,5 @@
-{
+
+  {
     "version": 2,
     "builds": [
       {
@@ -7,6 +8,14 @@
       }
     ],
     "routes": [
+      {
+        "src": "/",
+        "dest": "/public/hello.html"
+      },
+      {
+        "src": "/chiphi.html",
+        "dest": "/public/chiphi.html"
+      },
       {
         "src": "/api/(.*)",
         "dest": "/app.js"
