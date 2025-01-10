@@ -1,13 +1,11 @@
 {
     "version": 2,
-    "builds": [
-      { "src": "app.js", "use": "@vercel/node" }
-    ],
     "routes": [
+      { "src": "/api/(.*)", "dest": "/app.js" },
       { "src": "/chiphi.html", "dest": "/public/chiphi.html" },
-      { "src": "/", "dest": "/public/hello.html" },
-      { "src": "/api/(.*)", "dest": "/app.js" }
+      { "src": "/", "dest": "/public/hello.html" }
     ]
   }
+  
   
   
