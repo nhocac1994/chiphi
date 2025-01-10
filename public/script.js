@@ -130,69 +130,62 @@ const showChildView = async (parentId) => {
       </tr>
     `).join("");
 
-// Tạo một thẻ hình ảnh duy nhất để sử dụng cho tất cả các hover
-const imagePreview = document.createElement("img");
-imagePreview.id = "imagePreview"; // Gắn ID để dễ dàng quản lý
-imagePreview.style.position = "absolute";
-imagePreview.style.maxWidth = "600px";
-imagePreview.style.maxHeight = "600px";
-imagePreview.style.border = "1px solid #ddd";
-imagePreview.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-imagePreview.style.display = "none"; // Ẩn thẻ hình ảnh ban đầu
-imagePreview.style.zIndex = "1000"; // Đảm bảo hình ảnh nằm trên cùng
-document.body.appendChild(imagePreview);
+    // Tạo một thẻ hình ảnh duy nhất để sử dụng cho tất cả các hover
+    const imagePreview = document.createElement("img");
+    imagePreview.id = "imagePreview"; // Gắn ID để dễ dàng quản lý
+    imagePreview.style.position = "absolute";
+    imagePreview.style.maxWidth = "600px";
+    imagePreview.style.maxHeight = "600px";
+    imagePreview.style.border = "1px solid #ddd";
+    imagePreview.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+    imagePreview.style.display = "none"; // Ẩn thẻ hình ảnh ban đầu
+    imagePreview.style.zIndex = "1000"; // Đảm bảo hình ảnh nằm trên cùng
+    document.body.appendChild(imagePreview);
 
-// Xử lý sự kiện hover để hiển thị hình ảnh bên trái
-const tableRows = childTable.querySelectorAll("tr");
-tableRows.forEach((row) => {
-  const imageUrl = row.dataset.hinhAnh;
-  console.log("Hình ảnh URL:", imageUrl);
+    // Xử lý sự kiện hover để hiển thị hình ảnh bên trái
+    const tableRows = childTable.querySelectorAll("tr");
+    tableRows.forEach((row) => {
+      const imageUrl = row.dataset.hinhAnh;
+      console.log("Hình ảnh URL:", imageUrl);
 
-  row.addEventListener("mouseover", (event) => {
-    if (imageUrl) {
-      // Đảm bảo rằng đường dẫn hình ảnh là URL hoàn chỉnh
-      imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
-      imagePreview.alt = "Hình ảnh chi tiết";
+      row.addEventListener("mouseover", (event) => {
+        if (imageUrl) {
+          imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
+          imagePreview.alt = "Hình ảnh chi tiết";
+      
+          // Tính toán vị trí của hàng
+          const rect = row.getBoundingClientRect();
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      
+          // Đặt vị trí mặc định: Bên dưới và bên phải hàng
+          let topPosition = rect.bottom + scrollTop + 10; // Bên dưới hàng
+          let leftPosition = rect.left + scrollLeft; // Căn trái theo hàng
+      
+          // Kiểm tra và điều chỉnh nếu hình ảnh vượt khung nhìn
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+      
+          if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
+            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 10; // Đặt phía trên hàng
+          }
+      
+          if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
+            leftPosition = viewportWidth - imagePreview.offsetWidth - 10; // Căn phải
+          }
+      
+          imagePreview.style.top = `${topPosition}px`;
+          imagePreview.style.left = `${leftPosition}px`;
+          imagePreview.style.display = "block"; // Hiển thị hình ảnh
+        }
+      });
+      
 
-      // Tính toán vị trí của hàng để đặt hình ảnh
-      const rect = row.getBoundingClientRect();
-      const scrollTop = window.scrollY || window.pageYOffset;
-      const scrollLeft = window.scrollX || window.pageXOffset;
-
-      // Kích thước hình ảnh
-      const imageWidth = 600; // maxWidth
-      const imageHeight = 600; // maxHeight
-
-      // Kích thước cửa sổ trình duyệt
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      // Tính toán vị trí ban đầu: bên trái hàng, cách 10px
-      let topPosition = rect.top + scrollTop + 50;
-      let leftPosition = rect.left + scrollLeft - imageWidth - 10;
-
-      // Kiểm tra nếu hình ảnh vượt ra ngoài phía trái màn hình
-      if (leftPosition < scrollLeft) {
-        leftPosition = rect.left + scrollLeft + 10; // Đặt bên phải hàng nếu không đủ chỗ bên trái
-      }
-
-      // Kiểm tra nếu hình ảnh vượt ra ngoài phía dưới màn hình
-      if (topPosition + imageHeight > scrollTop + viewportHeight) {
-        topPosition = rect.top + scrollTop - imageHeight - 10; // Đặt phía trên hàng
-      }
-
-      // Đặt vị trí của hình ảnh
-      imagePreview.style.top = `${topPosition}px`;
-      imagePreview.style.left = `${leftPosition}px`;
-      imagePreview.style.display = "block"; // Hiển thị hình ảnh
-    }
-  });
-
-  row.addEventListener("mouseout", () => {
-    // Ẩn hình ảnh khi không hover
-    imagePreview.style.display = "none";
-  });
-});
+      row.addEventListener("mouseout", () => {
+        // Ẩn hình ảnh khi không hover
+        imagePreview.style.display = "none";
+      });
+    });
 
 
 

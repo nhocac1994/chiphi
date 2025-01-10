@@ -387,12 +387,12 @@ form button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 #imagePreview {
-  position: absolute;
+  position: absolute !important;
   max-width: 600px;
   max-height: 600px;
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: none; /* Ẩn hình ảnh ban đầu */
-  z-index: 1000; /* Đảm bảo hình ảnh nằm trên cùng */
-  background-color: white; /* Đảm bảo nền trắng cho ảnh */
+  display: none;
+  z-index: 1000;
 }
+
