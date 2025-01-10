@@ -1,6 +1,10 @@
 // public/script.js
 
-const apiBaseUrl = "http://localhost:3000/api"; // Đảm bảo rằng đường dẫn này đúng
+const apiBaseUrl =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000/api"
+    : "https://chiphi-pg20zqgho-mges-v2.vercel.app/api";
+
 
 // Các biến trạng thái
 let isEditingChild = false;
