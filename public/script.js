@@ -140,33 +140,42 @@ const showChildView = async (parentId) => {
 
       row.addEventListener("mouseover", (event) => {
         if (imageUrl) {
+          // Đặt nguồn hình ảnh
           imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
           imagePreview.alt = "Hình ảnh chi tiết";
-      
-          // Tính toán vị trí của hàng
+
+          // Tính toán vị trí của hàng để đặt hình ảnh bên trái
           const rect = row.getBoundingClientRect();
-          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-          const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      
-          // Đặt vị trí mặc định: Bên dưới và bên phải hàng
-          let topPosition = rect.bottom + scrollTop + 10; // Bên dưới hàng
-          let leftPosition = rect.left + scrollLeft; // Căn trái theo hàng
-      
-          // Kiểm tra và điều chỉnh nếu hình ảnh vượt khung nhìn
+          const scrollTop = window.scrollY || window.pageYOffset;
+          const scrollLeft = window.scrollX || window.pageXOffset;
+
+          // Kích thước hình ảnh
+          const imageWidth = 600; // maxWidth
+          const imageHeight = 600; // maxHeight
+
+          // Kích thước cửa sổ trình duyệt
           const viewportWidth = window.innerWidth;
           const viewportHeight = window.innerHeight;
-      
-          if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
-            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 20; // Đặt phía trên hàng
+
+          // Tính toán vị trí ban đầu: bên trái hàng, cách 10px
+          let topPosition = rect.top + scrollTop + 30;
+          let leftPosition = rect.left + scrollLeft - imageWidth - 10;
+
+          // Kiểm tra nếu hình ảnh vượt ra ngoài phía trái màn hình
+          if (leftPosition < scrollLeft) {
+            leftPosition = rect.left + scrollLeft + 10; // Đặt bên phải hàng nếu không đủ chỗ bên trái
           }
-      
-          if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
-            leftPosition = viewportWidth - imagePreview.offsetWidth - 10; // Căn phải
+
+          // Kiểm tra nếu hình ảnh vượt ra ngoài phía dưới màn hình
+          if (topPosition + imageHeight > scrollTop + viewportHeight) {
+            topPosition = rect.top + scrollTop - imageHeight - 10; // Đặt phía trên hàng
           }
-      
+
+          // Đặt vị trí của hình ảnh
           imagePreview.style.top = `${topPosition}px`;
           imagePreview.style.left = `${leftPosition}px`;
           imagePreview.style.display = "block"; // Hiển thị hình ảnh
+          imagePreview.classList.add("show");
         }
       });
       

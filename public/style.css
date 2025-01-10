@@ -394,5 +394,6 @@ form button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: none;
   z-index: 1000;
+  margin-top: 10px;
 }
 

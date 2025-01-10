@@ -22,15 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const scrollLeft = window.scrollX || window.pageXOffset;
   
             // Kích thước hình ảnh
-            const imageWidth = 300; // maxWidth
-            const imageHeight = 300; // maxHeight
+            const imageWidth = 600; // maxWidth
+            const imageHeight = 600; // maxHeight
   
             // Kích thước cửa sổ trình duyệt
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
   
             // Tính toán vị trí ban đầu: bên trái hàng, cách 10px
-            let topPosition = rect.top + scrollTop + 10;
+            let topPosition = rect.top + scrollTop + 30;
             let leftPosition = rect.left + scrollLeft - imageWidth - 10;
   
             // Kiểm tra nếu hình ảnh vượt ra ngoài phía trái màn hình
