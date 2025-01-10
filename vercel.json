@@ -1,25 +1,13 @@
-
-  {
+{
     "version": 2,
     "builds": [
-      {
-        "src": "app.js",
-        "use": "@vercel/node"
-      }
+      { "src": "app.js", "use": "@vercel/node" }
     ],
     "routes": [
-      {
-        "src": "/",
-        "dest": "/public/hello.html"
-      },
-      {
-        "src": "/chiphi.html",
-        "dest": "/public/chiphi.html"
-      },
-      {
-        "src": "/api/(.*)",
-        "dest": "/app.js"
-      }
+      { "src": "/chiphi.html", "dest": "/public/chiphi.html" },
+      { "src": "/", "dest": "/public/hello.html" },
+      { "src": "/api/(.*)", "dest": "/app.js" }
     ]
   }
+  
   
