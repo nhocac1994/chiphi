@@ -30,22 +30,25 @@
     <!-- Nội dung chính -->
     <div id="mainContent" style="display: none;">
         <div class="container">
-            <header class="content">
-            <h1>Chi phí đi lại</h1>
-            <!-- Thay thế nút bằng icon -->
-            <button id="addParentButton" class="icon-button">
-                <i class="bi bi-plus-square"></i>
-            </button>
-  
+            <header>
+            <h1>Chi phí đi lại</h1>   
             </header>
 
             <section id="parentView">
-            <h2>Danh sách chi phí</h2>
+
+            <div class="container">
+                <h2>Danh sách chi phí</h2>
+                <button id="addParentButton" class="icon-button">
+                    <i class="bi bi-plus-square"></i>
+                </button>
+            </div>
+            
             <table id="parentTable">
                 <thead>
                 <tr>
                     <th>Ngày bắt đầu</th>
                     <th>Ngày kết thúc</th>
+                    <th>Chia sẻ</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -56,8 +59,8 @@
         <!-- Modal hiển thị bảng con -->
         <div id="childModal" class="modal-fullscreen hidden">
         <div class="modal-content">
-            <header class="content">
             <span class="close" id="closeModalBtn">&times;</span> <!-- Nút đóng -->
+            <header class="content">
             <h2>Chi tiết chi phí</h2>
             <button id="addChildButton" class="icon-button"><i class="bi bi-plus-square"></i></button>
             </header>
