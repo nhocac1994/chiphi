@@ -26,8 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware để hỗ trợ method override
 app.use(methodOverride('_method')); // Sử dụng tham số '_method' để thay thế phương thức
 
-// Middleware để phục vụ static files (hình ảnh và public)
-// Vô hiệu hóa việc phục vụ index.html mặc định
+// Đảm bảo thư mục public được phục vụ
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
 // Thiết lập view engine
@@ -42,19 +41,18 @@ app.use("/api/upload-image", uploadImageRoutes);
 // Mount các route view
 app.use("/", viewRoutes); // Đảm bảo rằng viewRoutes đã được nhập khẩu
 
-// Route riêng cho /index.html
-app.get('/index.html', (req, res) => {
+// Route cho /index.html
+app.get("/index.html", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Route gốc / để trả về hello.html thay vì lỗi 404
-app.get('/', (req, res) => {
+// Route gốc / để trả về hello.html
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "hello.html"));
 });
 
 // Middleware xử lý lỗi 404 cho các route không được định nghĩa
-// Nếu bạn muốn tất cả các route không được định nghĩa khác cũng trả về hello.html
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "public", "hello.html"));
 });
 
