@@ -51,6 +51,31 @@ window.addEventListener("click", (event) => {
 });
 
 // Fetch và hiển thị danh sách bảng cha
+// const fetchParentExpenses = async () => {
+//   try {
+//     const response = await fetch(`${apiBaseUrl}/parent-expenses`);
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     const parents = await response.json();
+
+//     // Chỉ gán dữ liệu cho bảng
+//     parentTable.innerHTML = parents.map(parent => `
+//       <tr data-id="${parent._id}">
+//         <td>${new Date(parent.ngayBatDau).toLocaleDateString()}</td>
+//         <td>${parent.ngayKetThuc ? new Date(parent.ngayKetThuc).toLocaleDateString() : "Chưa kết thúc"}</td>
+//       </tr>
+//     `).join("");
+
+//     // Gắn sự kiện click cho từng dòng bảng cha
+//     document.querySelectorAll("tr[data-id]").forEach(item => {
+//       item.addEventListener("click", () => showChildView(item.dataset.id));
+//     });
+//   } catch (error) {
+//     console.error("Lỗi khi tải danh sách bảng cha:", error);
+//     alert("Lỗi khi tải danh sách bảng cha.");
+//   }
+// };
 const fetchParentExpenses = async () => {
   try {
     const response = await fetch(`${apiBaseUrl}/parent-expenses`);
@@ -59,18 +84,36 @@ const fetchParentExpenses = async () => {
     }
     const parents = await response.json();
 
-    // Chỉ gán dữ liệu cho bảng
+    // Gán dữ liệu cho bảng, bao gồm nút chia sẻ
     parentTable.innerHTML = parents.map(parent => `
       <tr data-id="${parent._id}">
         <td>${new Date(parent.ngayBatDau).toLocaleDateString()}</td>
         <td>${parent.ngayKetThuc ? new Date(parent.ngayKetThuc).toLocaleDateString() : "Chưa kết thúc"}</td>
+        <td>
+          <!-- Nút chia sẻ -->
+          <button class="share-btn" data-id="${parent._id}">
+            <i class="bi bi-share"></i> Chia sẻ
+          </button>
+        </td>
       </tr>
     `).join("");
 
-    // Gắn sự kiện click cho từng dòng bảng cha
-    document.querySelectorAll("tr[data-id]").forEach(item => {
-      item.addEventListener("click", () => showChildView(item.dataset.id));
+    // Gắn sự kiện click cho từng nút chia sẻ
+    document.querySelectorAll(".share-btn").forEach(button => {
+      button.addEventListener("click", (event) => {
+        const id = event.target.closest("button").dataset.id; // Lấy ID của bảng cha
+        const shareLink = `https://chiphidilai.vercel.app/view/${id}`;
+
+        // Sao chép liên kết vào clipboard
+        navigator.clipboard.writeText(shareLink).then(() => {
+          alert("Liên kết đã được sao chép: " + shareLink);
+        }).catch((err) => {
+          console.error("Lỗi khi sao chép liên kết:", err);
+          alert("Không thể sao chép liên kết.");
+        });
+      });
     });
+
   } catch (error) {
     console.error("Lỗi khi tải danh sách bảng cha:", error);
     alert("Lỗi khi tải danh sách bảng cha.");
