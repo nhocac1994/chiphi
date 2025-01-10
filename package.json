@@ -1,12 +1,12 @@
 {
   "name": "chiphi",
   "version": "1.0.0",
-"scripts": {
-  "start": "node app.js",
-  "dev": "nodemon app.js"
-}
-,
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
   "dependencies": {
+    "@vercel/analytics": "^1.4.1",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
