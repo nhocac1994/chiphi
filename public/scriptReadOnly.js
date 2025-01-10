@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const viewportHeight = window.innerHeight;
   
             // Tính toán vị trí ban đầu: bên trái hàng, cách 10px
-            let topPosition = rect.top + scrollTop - 10;
+            let topPosition = rect.top + scrollTop + 20;
             let leftPosition = rect.left + scrollLeft - imageWidth - 10;
   
             // Kiểm tra nếu hình ảnh vượt ra ngoài phía trái màn hình
