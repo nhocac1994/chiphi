@@ -405,19 +405,31 @@ form button:hover {
   height: 100vh;
   background: #6a11cb;
   background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
   display: flex;
   justify-content: center; /* Căn giữa theo chiều ngang */
   align-items: center; /* Căn giữa theo chiều dọc */
   z-index: 1000;
 }
 
+
 .modal-login-content {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 400px;
-  max-width: 400px; /* Giới hạn chiều rộng tối đa */
+  max-width: 400px;
+  padding: 20px;
+  text-align: center;
+}
+
+
+.modal-login-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 400px;
   padding: 20px;
   text-align: center;
 }
