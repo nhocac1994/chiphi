@@ -157,7 +157,7 @@ const showChildView = async (parentId) => {
           const viewportHeight = window.innerHeight;
       
           if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
-            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 50; // Đặt phía trên hàng
+            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 20; // Đặt phía trên hàng
           }
       
           if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
@@ -257,135 +257,6 @@ parentForm.addEventListener("submit", async (e) => {
   }
 });
 
-// Event listener cho form thêm/cập nhật chi phí con
-// childForm.addEventListener("submit", async (e) => {
-//   e.preventDefault();
-
-//   // Lấy dữ liệu từ form
-//   const parentId = parentDetails.dataset.id;
-//   const ngayThang = document.getElementById("childDate").value.trim();
-//   const noiDung = document.getElementById("childContent").value.trim();
-//   const giaTienValue = document.getElementById("childPrice").value.trim();
-//   const giaTien = giaTienValue ? parseFloat(giaTienValue) : null;
-//   const diaDiem = document.getElementById("childLocation").value.trim();
-//   const ghiChu = document.getElementById("childNote").value.trim();
-//   const hinhAnhInput = document.getElementById("childImage").files[0];
-
-//   // Log dữ liệu trước khi gửi
-//   console.log("Dữ liệu gửi lên:", { parentId, ngayThang, noiDung, giaTien, diaDiem, ghiChu });
-
-//   // Kiểm tra dữ liệu bắt buộc
-//   if (!parentId || !ngayThang || !noiDung || giaTien == null || !diaDiem) {
-//     alert("Vui lòng điền đầy đủ thông tin chi phí.");
-//     return;
-//   }
-
-//   if (isNaN(giaTien) || giaTien <= 0) {
-//     alert("Vui lòng nhập một giá tiền hợp lệ.");
-//     return;
-//   }
-
-//   // Đối tượng dữ liệu để gửi
-//   const payload = {
-//     ngayThang,
-//     noiDung,
-//     giaTien,
-//     diaDiem,
-//     ghiChu,
-//   };
-
-//   // Nếu đang trong chế độ chỉnh sửa, không thêm maChiPhi
-//   if (!isEditingChild) {
-//     payload.maChiPhi = parentId;
-//   }
-
-//   // Log payload để kiểm tra
-//   console.log("Payload gửi lên:", payload);
-
-//   try {
-//     let response;
-//     let data;
-
-//     if (isEditingChild && currentChildId) {
-//       // Cập nhật chi phí con
-//       response = await fetch(`${apiBaseUrl}/child-expenses/${currentChildId}`, {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(payload),
-//       });
-
-//       if (response.ok) {
-//         data = await response.json();
-//         alert("Cập nhật thành công!");
-//       } else {
-//         const errorData = await response.json();
-//         alert(`Lỗi khi cập nhật: ${errorData.message || "Unknown error."}`);
-//         return;
-//       }
-//     } else {
-//       // Thêm mới chi phí con
-//       response = await fetch(`${apiBaseUrl}/child-expenses`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(payload),
-//       });
-
-//       if (response.ok) {
-//         data = await response.json();
-//         alert("Thêm mới thành công!");
-//       } else {
-//         const errorData = await response.json();
-//         alert(`Lỗi khi thêm mới: ${errorData.message || "Unknown error."}`);
-//         return;
-//       }
-//     }
-
-//     // Đóng modal và cập nhật giao diện
-//     closeModalFunc(addChildModal);
-//     showChildView(parentId);
-
-//     // Nếu có ảnh, xử lý tiếp
-//     if (hinhAnhInput) {
-//       const formData = new FormData();
-//       formData.append("image", hinhAnhInput);
-//       formData.append("childId", isEditingChild && currentChildId ? currentChildId : data._id);
-
-//       try {
-//         const uploadResponse = await fetch(`${apiBaseUrl}/upload-image`, {
-//           method: "POST",
-//           body: formData,
-//         });
-
-//         if (uploadResponse.ok) {
-//           const uploadData = await uploadResponse.json();
-//           alert("Hình ảnh đã được tải lên thành công!");
-//           // Tải lại giao diện để hiển thị hình ảnh
-//           showChildView(parentId);
-//         } else {
-//           const uploadErrorData = await uploadResponse.json();
-//           alert(`Lỗi khi tải hình ảnh: ${uploadErrorData.message || "Unknown error."}`);
-//         }
-//       } catch (error) {
-//         console.error("Lỗi khi tải hình ảnh:", error);
-//         alert("Lỗi khi xử lý hình ảnh.");
-//       }
-//     }
-
-//     // Reset trạng thái sau khi cập nhật
-//     if (isEditingChild) {
-//       isEditingChild = false;
-//       currentChildId = null;
-//     }
-
-//     // Reset form sau khi thêm mới
-//     if (!isEditingChild) {
-//       childForm.reset();
-//     }
-//   } catch (error) {
-//     console.error("Lỗi khi xử lý dữ liệu:", error);
-//     alert("Lỗi khi xử lý dữ liệu.");
-//   }
-// });
 
 // Event listener cho form thêm/cập nhật chi phí con
 childForm.addEventListener("submit", async (e) => {
