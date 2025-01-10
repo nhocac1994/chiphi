@@ -473,4 +473,32 @@ form button:hover {
   color: red;
   display: none; /* Mặc định ẩn */
 }
+/* Kiểu nút với biểu tượng */
+.icon-button {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa biểu tượng và text */
+  padding: 10px 15px;
+  background-color: #007bff; /* Màu nền */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.icon-button i {
+  font-size: 1.2rem; /* Kích thước biểu tượng */
+}
+
+.icon-button:hover {
+  background-color: #0056b3; /* Màu nền khi hover */
+}
+
+.icon-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 

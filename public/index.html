@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi phí đi lại</title>
   <link rel="stylesheet" href="/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 <body>
     <!-- Modal đăng nhập -->
@@ -30,7 +32,11 @@
         <div class="container">
             <header class="content">
             <h1>Chi phí đi lại</h1>
-            <button id="addParentButton">Thêm bảng cha</button>
+            <!-- Thay thế nút bằng icon -->
+            <button id="addParentButton" class="icon-button">
+                <i class="bi bi-plus-square"></i>
+            </button>
+  
             </header>
 
             <section id="parentView">
@@ -53,9 +59,8 @@
             <header class="content">
             <span class="close" id="closeModalBtn">&times;</span> <!-- Nút đóng -->
             <h2>Chi tiết chi phí</h2>
-            <button id="addChildButton">Thêm bảng con</button>
+            <button id="addChildButton" class="icon-button"><i class="bi bi-plus-square"></i></button>
             </header>
-
             <p id="parentDetails"></p>
             <section id="childView">
             <table id="childTable">
