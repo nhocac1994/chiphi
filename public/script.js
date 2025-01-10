@@ -493,19 +493,22 @@ childForm.addEventListener("submit", async (e) => {
     // Nếu có ảnh, xử lý tiếp
     if (hinhAnhInput) {
       const formData = new FormData();
-      formData.append("image", hinhAnhInput);
-      formData.append("childId", isEditingChild && currentChildId ? currentChildId : data._id);
+      formData.append("image", hinhAnhInput); // Tệp hình ảnh
+      formData.append("childId", isEditingChild && currentChildId ? currentChildId : data._id); // ID của chi phí con
 
       try {
+        // Gửi yêu cầu tới API upload-image
         const uploadResponse = await fetch(`${apiBaseUrl}/upload-image`, {
           method: "POST",
-          body: formData,
+          body: formData, // Gửi dữ liệu FormData
         });
 
         if (uploadResponse.ok) {
           const uploadData = await uploadResponse.json();
           alert("Hình ảnh đã được tải lên thành công!");
-          // Tải lại giao diện để hiển thị hình ảnh
+          console.log("Hình ảnh đã tải lên:", uploadData.hinhAnh);
+
+          // Tải lại giao diện để hiển thị hình ảnh đã cập nhật
           showChildView(parentId);
         } else {
           const uploadErrorData = await uploadResponse.json();
@@ -516,6 +519,7 @@ childForm.addEventListener("submit", async (e) => {
         alert("Lỗi khi xử lý hình ảnh.");
       }
     }
+
 
     // Reset trạng thái sau khi cập nhật
     if (isEditingChild) {
