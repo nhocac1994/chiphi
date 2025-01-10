@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method')); // Sử dụng tham số '_method' để thay thế phương thức
 
 // Đảm bảo thư mục public được phục vụ
-app.use(express.static(path.join(__dirname, "public"), { index: false }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Thiết lập view engine
 app.set('view engine', 'ejs');
@@ -42,20 +42,7 @@ app.use("/api/upload-image", uploadImageRoutes);
 // Mount các route view
 app.use("/", viewRoutes); // Đảm bảo rằng viewRoutes đã được nhập khẩu
 
-// Route cho /index.html
-app.get("/chiphi.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "chiphi.html"));
-});
 
-// Route gốc / để trả về hello.html
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "hello.html"));
-});
-
-// Middleware xử lý lỗi 404 cho các route không được định nghĩa
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "public", "hello.html"));
-});
 
 // Middleware xử lý lỗi chung
 app.use((err, req, res, next) => {
