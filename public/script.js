@@ -50,32 +50,7 @@ window.addEventListener("click", (event) => {
   });
 });
 
-// Fetch và hiển thị danh sách bảng cha
-// const fetchParentExpenses = async () => {
-//   try {
-//     const response = await fetch(`${apiBaseUrl}/parent-expenses`);
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//     }
-//     const parents = await response.json();
 
-//     // Chỉ gán dữ liệu cho bảng
-//     parentTable.innerHTML = parents.map(parent => `
-//       <tr data-id="${parent._id}">
-//         <td>${new Date(parent.ngayBatDau).toLocaleDateString()}</td>
-//         <td>${parent.ngayKetThuc ? new Date(parent.ngayKetThuc).toLocaleDateString() : "Chưa kết thúc"}</td>
-//       </tr>
-//     `).join("");
-
-//     // Gắn sự kiện click cho từng dòng bảng cha
-//     document.querySelectorAll("tr[data-id]").forEach(item => {
-//       item.addEventListener("click", () => showChildView(item.dataset.id));
-//     });
-//   } catch (error) {
-//     console.error("Lỗi khi tải danh sách bảng cha:", error);
-//     alert("Lỗi khi tải danh sách bảng cha.");
-//   }
-// };
 const fetchParentExpenses = async () => {
   try {
     const response = await fetch(`${apiBaseUrl}/parent-expenses`);
@@ -258,8 +233,8 @@ const showChildView = async (parentId) => {
           }
         </div>
         <div class="card-actions">
-          <button class="edit-btn" data-id="${child._id}">Sửa</button>
-          <button class="delete-btn" data-id="${child._id}">Xóa</button>
+            <button class="edit-btn" data-id="${child._id}"><i class="bi bi-pencil-square"></i></button>
+            <button class="delete-btn" data-id="${child._id}"><i class="bi bi-trash"></i></button>
         </div>
       </div>
     `).join("");

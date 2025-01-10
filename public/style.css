@@ -1,9 +1,23 @@
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;  /* font chữ hiện đại hơn */
   margin: 0;
   padding: 0;
-  background-color: #f9f9f9;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);  /* gradient nhẹ nhàng */
+  min-height: 100vh;  /* đảm bảo gradient phủ toàn màn hình */
+  color: #2c3e50;  /* màu chữ đậm hơn */
+}
+
+/* Thêm overlay mờ để tăng độ sâu */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.02);  /* overlay rất nhẹ */
+  pointer-events: none;
 }
 
 .container {
@@ -13,11 +27,30 @@ body {
 }
 
 .content {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 10px 0;
 }
+
+.float-right {
+  margin-left: auto;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #0d6efd;
+}
+
+.icon-button:hover {
+  color: #0b5ed7;
+}
+
+
 
 h1 {
   color: #444;
@@ -30,7 +63,6 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 50px;
 }
 
 button:hover {
@@ -39,8 +71,10 @@ button:hover {
 
 /* Table Styles */
 table {
-  width: 100%;
+  width: 100vw; /* Chiếm toàn bộ chiều rộng viewport */
+  max-width: 100%;
   border-collapse: collapse;
+  margin: 0; /* Bỏ margin nếu có */
 }
 
 table th,
@@ -49,8 +83,9 @@ table td {
   border: 1px solid #ddd;
   text-align: left;
 }
-table tr:hover{
-  background-color:rgb(128, 151, 174);
+
+table tr:hover {
+  background-color: rgb(128, 151, 174);
 }
 
 .hidden {
@@ -58,7 +93,8 @@ table tr:hover{
 }
 
 /* Modal Styles */
-.modal {
+.modal,
+.modal-fullscreen {
   display: none;
   position: fixed;
   top: 0;
@@ -72,7 +108,8 @@ table tr:hover{
   z-index: 1000;
 }
 
-.modal .modal-content {
+.modal .modal-content,
+.modal-fullscreen .modal-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
@@ -82,35 +119,21 @@ table tr:hover{
   position: relative;
 }
 
-
 /* Fullscreen Modal */
 .modal-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
   background-color: rgba(0, 0, 0, 0.8); /* Nền mờ */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
 }
 
-/* Modal Content */
 .modal-fullscreen .modal-content {
-  background-color: #fff;
-  width: 95%; /* Gần toàn màn hình theo chiều ngang */
-  height: 95%; /* Gần toàn màn hình theo chiều dọc */
-  border-radius: 8px;
+  width: 100%; /* Gần toàn màn hình theo chiều ngang */
+  height: 100%; /* Gần toàn màn hình theo chiều dọc */
+  border-radius: 0;
   overflow: auto;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Table Inside Modal */
 .modal-fullscreen table {
   width: 100%;
   border-collapse: collapse;
@@ -121,7 +144,7 @@ table tr:hover{
 .modal-fullscreen th,
 .modal-fullscreen td {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 8px;
   text-align: left;
 }
 
@@ -145,7 +168,6 @@ table tr:hover{
   color: red;
 }
 
-
 /* Nội dung modal */
 .modal-content-upload {
   background-color: #fff;
@@ -158,10 +180,6 @@ table tr:hover{
   animation: slideDown 0.3s ease-out; /* Hiệu ứng hiển thị */
 }
 
-/* Nút đóng */
-
-
-/* Tiêu đề */
 .modal-content-upload h2 {
   margin-top: 0;
   font-size: 24px;
@@ -223,95 +241,67 @@ form button:hover {
   form button {
     font-size: 14px;
   }
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 5px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #555;
-    cursor: pointer;
-  }
-  
-  .close:hover {
-    color: red;
-  }
+
   .modal-fullscreen .close {
-    position: absolute;
-    top: 20px;
     right: 15px;
-    font-size: 40px;
-    font-weight: bold;
-    color: #000;
-    cursor: pointer;
+    font-size: 30px;
   }
-}
 
-#childCards{
-  display: none;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  #childTable{
+  /* Ẩn bảng và hiển thị thẻ */
+  #childTable {
     display: none;
   }
 
+  #childCards {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa thẻ theo chiều ngang */
+    gap: 5px;
+    padding: 0;
+    margin: 0;
+  }
+
   .card {
-    display: fixed;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    display: block !important;
+    width: 100%; /* Đặt chiều rộng phù hợp */
+    margin: 0 auto; /* Căn giữa thẻ */
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  .card {
+      margin: 5px;  /* giảm margin nhỏ hơn nữa với mobile */
+      padding: 8px;
   }
 
-  .modal .modal-content {
-    width: 100%;
+  .content {
+      padding: 5px 0;  /* giảm padding top/bottom */
+      margin: 0;
   }
-  #childCards{
-    display: block;
+
+  /* Nếu container có padding */
+  .container {
+      padding-left: 10px;
+      padding-right: 10px;
+      max-width: 100%;
+      margin: 0;
   }
+
 }
 
-/* Table Inside Modal */
-.modal-fullscreen table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.modal-fullscreen th,
-.modal-fullscreen td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.modal-fullscreen th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-/* public/styles.css */
-
-#imagePreview {
-  transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
-  opacity: 0;
-}
-
-#imagePreview[style*="display: block"] {
-  opacity: 1;
-}
-
-
-/* Container for cards */
+/* Card Container */
 .card-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* Căn giữa các thẻ */
   gap: 15px;
 }
 
 /* Individual Card */
 .card {
-  width: calc(100% - 20px); /* Adjust width for responsiveness */
+  display: none;
+  width: 100%; /* Điều chỉnh lại cho màn hình lớn */
   max-width: 100%;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -372,6 +362,7 @@ form button:hover {
   margin-top: 10px;
   border-top: 1px solid #ddd;
   padding-top: 10px;
+  margin: 0 auto;
 }
 
 .card-details .note {
@@ -381,11 +372,14 @@ form button:hover {
 }
 
 .card-details img {
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: block;
+  margin: 0 auto;  /* Thêm margin auto để căn giữa */
 }
+
 #imagePreview {
   position: absolute !important;
   max-width: 600px;
@@ -395,7 +389,14 @@ form button:hover {
   display: none;
   z-index: 1000;
   margin-top: 10px;
+  transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
+  opacity: 0;
 }
+
+#imagePreview[style*="display: block"] {
+  opacity: 1;
+}
+
 /* CSS cho phần đăng nhập */
 .modal-login {
   position: fixed;
@@ -412,24 +413,12 @@ form button:hover {
   z-index: 1000;
 }
 
-
 .modal-login-content {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 400px;
-  max-width: 400px;
-  padding: 20px;
-  text-align: center;
-}
-
-
-.modal-login-content {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 400px;
-  max-width: 400px;
+  max-width: 90%; /* Thay đổi để phù hợp với di động */
   padding: 20px;
   text-align: center;
 }
@@ -487,11 +476,12 @@ form button:hover {
   color: red;
   display: none; /* Mặc định ẩn */
 }
+
 /* Kiểu nút với biểu tượng */
 .icon-button {
   display: flex;
   align-items: center;
-  gap: 1px; /* Khoảng cách giữa biểu tượng và text */
+  gap: 8px; /* Khoảng cách giữa biểu tượng và text */
   padding: 10px 15px;
   background-color: #007bff; /* Màu nền */
   color: #fff;
@@ -535,4 +525,32 @@ form button:hover {
 
 .share-btn:hover {
   background-color: #218838; /* Màu khi hover */
+}
+.card-actions {
+  display: flex;
+  gap: 10px;  /* khoảng cách giữa 2 nút */
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  color: #ffc107;  /* màu vàng */
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.edit-btn:hover {
+  color: #e0a800;  /* màu vàng đậm khi hover */
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #dc3545;  /* màu đỏ */
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.delete-btn:hover {
+  color: #c82333;  /* màu đỏ đậm khi hover */
 }
