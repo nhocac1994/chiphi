@@ -130,17 +130,7 @@ const showChildView = async (parentId) => {
       </tr>
     `).join("");
 
-    // Tạo một thẻ hình ảnh duy nhất để sử dụng cho tất cả các hover
-    const imagePreview = document.createElement("img");
-    imagePreview.id = "imagePreview"; // Gắn ID để dễ dàng quản lý
-    imagePreview.style.position = "absolute";
-    imagePreview.style.maxWidth = "600px";
-    imagePreview.style.maxHeight = "600px";
-    imagePreview.style.border = "1px solid #ddd";
-    imagePreview.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-    imagePreview.style.display = "none"; // Ẩn thẻ hình ảnh ban đầu
-    imagePreview.style.zIndex = "1000"; // Đảm bảo hình ảnh nằm trên cùng
-    document.body.appendChild(imagePreview);
+
 
     // Xử lý sự kiện hover để hiển thị hình ảnh bên trái
     const tableRows = childTable.querySelectorAll("tr");
@@ -167,7 +157,7 @@ const showChildView = async (parentId) => {
           const viewportHeight = window.innerHeight;
       
           if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
-            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 10; // Đặt phía trên hàng
+            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 50; // Đặt phía trên hàng
           }
       
           if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
@@ -607,3 +597,19 @@ document.addEventListener("click", async (event) => {
 
 // Tải danh sách bảng cha khi trang tải
 document.addEventListener("DOMContentLoaded", fetchParentExpenses);
+
+// Kiểm tra đăng nhập
+document.getElementById("loginForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (username === "nhocac" && password === "mges@@@110994") {
+    // Đăng nhập thành công
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("mainContent").style.display = "block";
+  } else {
+    // Đăng nhập thất bại
+    document.getElementById("loginError").style.display = "block";
+  }
+});
