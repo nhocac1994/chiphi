@@ -1,6 +1,6 @@
 // public/script.js
 
-const apiBaseUrl = "https://chiphidilai-2366c7ltl-mges-v2.vercel.app//api";
+const apiBaseUrl = "https://chiphidilai-i5ptl45x6-mges-v2.vercel.app/api";
 
 // Các biến trạng thái
 let isEditingChild = false;
