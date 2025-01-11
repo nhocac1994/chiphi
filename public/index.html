@@ -65,32 +65,44 @@
 
         <!-- Modal hiển thị bảng con -->
         <div id="childModal" class="modal-fullscreen hidden">
-        <div class="modal-content">
-            <span class="close" id="closeModalBtn">&times;</span> <!-- Nút đóng -->
-            <h2>Chi tiết chi phí</h2>
-            <div class="content">
-              <p id="parentDetails"></p>
-              <button id="addChildButton" class="icon-button float-right"><i class="bi bi-plus-square"></i></button>
+          <div class="modal-content">
+              <!-- Header cố định -->
+              <div class="modal-header">
+                  <span class="close" id="closeModalBtn">&times;</span>
+                  <h2>Chi tiết chi phí</h2>
+                  <div class="content">
+                      <p id="parentDetails"></p>
+                      <button id="addChildButton" class="icon-button float-right">
+                          <i class="bi bi-plus-square"></i>
+                      </button>
+                  </div>
+              </div>
+      
+              <!-- Content có thể cuộn -->
+              <div class="modal-body">
+                  <section id="childView">
+                      <div class="table-container">
+                          <table id="childTable">
+                              <thead>
+                                  <tr>
+                                      <th>Ngày tháng</th>
+                                      <th>Nội dung</th>
+                                      <th>Giá tiền</th>
+                                      <th>Địa điểm</th>
+                                      <th>Ghi chú</th>
+                                      <th></th>
+                                  </tr>
+                              </thead>
+                              <tbody></tbody>
+                          </table>
+                      </div>
+                      <div id="childCards">
+                          <!-- Card content -->
+                      </div>
+                  </section>
+              </div>
           </div>
-
-            <section id="childView">
-            <table id="childTable">
-                <thead>
-                <tr>
-                    <th>Ngày tháng</th>
-                    <th>Nội dung</th>
-                    <th>Giá tiền</th>
-                    <th>Địa điểm</th>
-                    <th>Ghi chú</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <div id="childCards"></div>
-            </section>
-        </div>
-        </div>
+      </div>
     </div>
 
     <!-- Modal nhập liệu bảng cha -->

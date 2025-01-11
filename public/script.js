@@ -22,6 +22,90 @@ function formatCurrency(input) {
 }
 
 // DOM Elements
+const elements = {
+  parentTable: document.querySelector("#parentTable tbody"),
+  childTable: document.querySelector("#childTable tbody"),
+  childCards: document.getElementById("childCards"),
+  parentDetails: document.getElementById("parentDetails"),
+  addParentModal: document.getElementById("addParentModal"),
+  addChildModal: document.getElementById("addChildModal"),
+  childModal: document.getElementById("childModal"),
+  parentForm: document.getElementById("parentForm"),
+  childForm: document.getElementById("childForm"),
+  addParentButton: document.getElementById("addParentButton"),
+  addChildButton: document.getElementById("addChildButton"),
+  closeButtons: document.querySelectorAll(".close")
+};
+
+// Modal actions
+const modalActions = {
+  open: (modal) => {
+      if (!modal) return; // Kiểm tra modal tồn tại
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+          modal.classList.add('show');
+      });
+  },
+  close: (modal) => {
+      if (!modal) return; // Kiểm tra modal tồn tại
+      modal.classList.remove('show');
+      modal.addEventListener('transitionend', () => {
+          modal.classList.add('hidden');
+      }, { once: true });
+  }
+};
+
+// Event Handlers
+document.addEventListener('DOMContentLoaded', function() {
+  // Xử lý nút thêm
+  if (elements.addParentButton) {
+      elements.addParentButton.addEventListener('click', () => {
+          modalActions.open(elements.addParentModal);
+      });
+  }
+
+  if (elements.addChildButton) {
+      elements.addChildButton.addEventListener('click', () => {
+          modalActions.open(elements.addChildModal);
+      });
+  }
+
+  // Xử lý nút đóng
+  elements.closeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+          const modalId = this.getAttribute('data-modal');
+          if (!modalId) return; // Kiểm tra modalId tồn tại
+          
+          const modal = document.getElementById(modalId);
+          if (modal) { // Kiểm tra modal element tồn tại
+              modalActions.close(modal);
+          }
+      });
+  });
+
+  // Đóng modal khi click bên ngoài
+  window.addEventListener('click', function(event) {
+      if (event.target.classList.contains('modal-fullscreen')) {
+          modalActions.close(event.target);
+      }
+  });
+});
+
+// Debug helper
+function checkElements() {
+  console.log('Elements status:', {
+      addParentButton: !!elements.addParentButton,
+      addChildButton: !!elements.addChildButton,
+      addParentModal: !!elements.addParentModal,
+      addChildModal: !!elements.addChildModal,
+      closeButtons: elements.closeButtons.length
+  });
+}
+
+// Gọi hàm debug khi load
+document.addEventListener('DOMContentLoaded', checkElements);
+
+// DOM Elements
 const parentTable = document.querySelector("#parentTable tbody");
 const childTable = document.querySelector("#childTable tbody");
 const childCards = document.getElementById("childCards");
@@ -116,6 +200,7 @@ const fetchParentExpenses = async () => {
 const showChildView = async (parentId) => {
   try {
     // Hiển thị modal bảng con
+    showLoading(); // Hiển thị loading khi bắt đầu xử lý
     openModal(childModal);
 
     // Lấy danh sách bảng con từ API đúng đường dẫn
@@ -265,7 +350,7 @@ const showChildView = async (parentId) => {
         </div>
       </div>
     `).join("");
-
+    hideLoading();
     // Thêm cơ chế mở rộng chỉ khi nhấn vào nội dung
     document.querySelectorAll(".card-content.expandable").forEach((content) => {
       content.addEventListener("click", (e) => {
@@ -658,15 +743,25 @@ function showNotification(message, type = 'info', duration = 3000) {
 
 
 
-// Thông tin đăng nhập CHƯA mã hóa để test
-const CREDENTIALS = {
+// Hàm mã hóa đơn giản
+function simpleHash(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+  }
+  return hash.toString(36); // Chuyển về base36 để ngắn gọn
+}
+
+// Thông tin đăng nhập đã hash
+const SECURE_CREDENTIALS = {
   username: "nhocac",
-  password: "mges@@@110994"
+  passwordHash: simpleHash("mges@@@110994") // Hash được tạo từ password gốc
 };
 
 // Xử lý đăng nhập
 document.addEventListener('DOMContentLoaded', function() {
-  // Kiểm tra các elements tồn tại
   const loginForm = document.getElementById('loginForm');
   const loginModal = document.getElementById('loginModal');
   const mainContent = document.getElementById('mainContent');
@@ -677,62 +772,64 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
   }
 
-  // Thông tin đăng nhập
-  const CREDENTIALS = {
-      username: "nhocac",
-      password: "mges@@@110994"
-  };
-
-  // Kiểm tra trạng thái đăng nhập
+  // Kiểm tra đăng nhập
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const loginExpiry = localStorage.getItem('loginExpiry');
+  const now = new Date().getTime();
 
-  if (isLoggedIn) {
+  if (isLoggedIn && loginExpiry && now < parseInt(loginExpiry)) {
       loginModal.style.display = 'none';
       mainContent.style.display = 'block';
   } else {
-      loginModal.style.display = 'flex'; // Thay đổi từ 'block' sang 'flex'
+      localStorage.clear(); // Xóa hết data cũ
+      loginModal.style.display = 'flex';
       mainContent.style.display = 'none';
   }
 
-  // Xử lý đăng nhập
+  // Xử lý form đăng nhập
   loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      console.log('Form submitted');
 
-      const usernameInput = document.getElementById('username');
-      const passwordInput = document.getElementById('password');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const hashedPassword = simpleHash(password);
 
-      if (!usernameInput || !passwordInput) {
-          console.error('Không tìm thấy input fields');
-          return;
-      }
-
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      console.log('Thông tin đăng nhập:', { username, password });
-
-      if (username === CREDENTIALS.username && 
-          password === CREDENTIALS.password) {
+      if (username === SECURE_CREDENTIALS.username && 
+          hashedPassword === SECURE_CREDENTIALS.passwordHash) {
           
+          // Lưu trạng thái đăng nhập (24 giờ)
+          const expiry = new Date().getTime() + (24 * 60 * 60 * 1000);
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('loginExpiry', expiry.toString());
+
+          // Hiển thị nội dung
           loginModal.style.display = 'none';
           mainContent.style.display = 'block';
-          localStorage.setItem('isLoggedIn', 'true');
-          
+
+          // Thông báo
           if (typeof showNotification === 'function') {
               showNotification("Đăng nhập thành công!", "success");
-          } else {
-              alert("Đăng nhập thành công!");
           }
+
+          // Clear form
+          loginForm.reset();
       } else {
-          console.log('Đăng nhập thất bại');
           loginError.style.display = 'block';
-          
           if (typeof showNotification === 'function') {
               showNotification("Sai thông tin đăng nhập!", "error");
           }
       }
   });
+
+  // Kiểm tra session hết hạn mỗi phút
+  setInterval(() => {
+      const expiry = localStorage.getItem('loginExpiry');
+      if (expiry && new Date().getTime() > parseInt(expiry)) {
+          localStorage.clear();
+          location.reload();
+      }
+  }, 60000);
+
 
   // Thêm nút đăng xuất nếu cần
   const logoutBtn = document.getElementById('logoutBtn');
