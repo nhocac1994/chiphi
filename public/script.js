@@ -1,11 +1,25 @@
 // public/script.js
 
-const apiBaseUrl = "https://chiphidilai.vercel.app/api";
-// const apiBaseUrl = "http://localhost:3000/api";
+// const apiBaseUrl = "https://chiphidilai.vercel.app/api";
+const apiBaseUrl = "http://localhost:3000/api";
 
 // Các biến trạng thái
 let isEditingChild = false;
 let currentChildId = null;
+
+// Thêm hàm định dạng số tiền
+function formatCurrency(input) {
+  // Xóa tất cả ký tự không phải số
+  let value = input.value.replace(/[^0-9]/g, '');
+  
+  // Định dạng số với dấu phẩy
+  if (value) {
+      value = parseInt(value, 10).toLocaleString('vi-VN');
+  }
+  
+  // Cập nhật giá trị input
+  input.value = value;
+}
 
 // DOM Elements
 const parentTable = document.querySelector("#parentTable tbody");
@@ -85,17 +99,15 @@ const fetchParentExpenses = async () => {
 
         // Sao chép liên kết vào clipboard
         navigator.clipboard.writeText(shareLink).then(() => {
-          alert("Liên kết đã được sao chép: " + shareLink);
+          showNotification(`Liên kết đã được sao chép: " + shareLink`, "success");
         }).catch((err) => {
-          console.error("Lỗi khi sao chép liên kết:", err);
-          alert("Không thể sao chép liên kết.");
+          showNotification("Không thể sao chép liên kết.", "warning");
         });
       });
     });
 
   } catch (error) {
-    console.error("Lỗi khi tải danh sách bảng cha:", error);
-    alert("Lỗi khi tải danh sách bảng cha.");
+    showNotification("Lỗi khi tải danh sách bảng cha.", "warning");
   }
 };
 
@@ -103,7 +115,6 @@ const fetchParentExpenses = async () => {
 // Hàm để hiển thị chi tiết bảng con
 const showChildView = async (parentId) => {
   try {
-    console.log("Hiển thị bảng con cho Parent ID:", parentId);
     // Hiển thị modal bảng con
     openModal(childModal);
 
@@ -113,7 +124,6 @@ const showChildView = async (parentId) => {
       throw new Error(`HTTP error! status: ${childResponse.status}`);
     }
     const children = await childResponse.json();
-    console.log("Dữ liệu chi phí con:", children);
 
     // Lấy thông tin bảng cha từ API
     const parentResponse = await fetch(`${apiBaseUrl}/parent-expenses/${parentId}`);
@@ -154,73 +164,90 @@ const showChildView = async (parentId) => {
 
     // Tạo một thẻ hình ảnh duy nhất để sử dụng cho tất cả các hover
     const imagePreview = document.createElement("img");
-    imagePreview.id = "imagePreview"; // Gắn ID để dễ dàng quản lý
+    imagePreview.id = "imagePreview";
     imagePreview.style.position = "absolute";
     imagePreview.style.maxWidth = "600px";
     imagePreview.style.maxHeight = "600px";
     imagePreview.style.border = "1px solid #ddd";
-    imagePreview.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-    imagePreview.style.display = "none"; // Ẩn thẻ hình ảnh ban đầu
-    imagePreview.style.zIndex = "1000"; // Đảm bảo hình ảnh nằm trên cùng
+    imagePreview.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.15)";
+    imagePreview.style.display = "none";
+    imagePreview.style.zIndex = "1000";
+    imagePreview.style.opacity = "0";
+    imagePreview.style.transition = "opacity 0.9s ease, transform 0.3s ease";
+    imagePreview.style.transform = "scale(0.95)";
+    imagePreview.style.borderRadius = "8px";
     document.body.appendChild(imagePreview);
 
-    // Xử lý sự kiện hover để hiển thị hình ảnh bên trái
+    // Xử lý sự kiện hover
     const tableRows = childTable.querySelectorAll("tr");
     tableRows.forEach((row) => {
       const imageUrl = row.dataset.hinhAnh;
-      console.log("Hình ảnh URL:", imageUrl);
-
-      row.addEventListener("mouseover", (event) => {
-        if (imageUrl) {
-          imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
-          imagePreview.alt = "Hình ảnh chi tiết";
+      const cells = row.querySelectorAll("td:not(:last-child)");
       
-          // Tính toán vị trí của hàng
-          const rect = row.getBoundingClientRect();
-          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-          const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-      
-          // Đặt vị trí mặc định: Bên dưới và bên phải hàng
-          let topPosition = rect.bottom + scrollTop + 10; // Bên dưới hàng
-          let leftPosition = rect.left + scrollLeft; // Căn trái theo hàng
-      
-          // Kiểm tra và điều chỉnh nếu hình ảnh vượt khung nhìn
-          const viewportWidth = window.innerWidth;
-          const viewportHeight = window.innerHeight;
-      
-          if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
-            topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 10; // Đặt phía trên hàng
+      cells.forEach(cell => {
+        cell.addEventListener("mouseover", (event) => {
+          if (imageUrl) {
+            // Đặt src và hiển thị ảnh
+            imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
+            imagePreview.alt = "Hình ảnh chi tiết";
+            
+            // Tính toán vị trí
+            const rect = cell.getBoundingClientRect();
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+            
+            let topPosition = rect.bottom + scrollTop + 10;
+            let leftPosition = rect.left + scrollLeft;
+            
+            // Điều chỉnh vị trí nếu cần
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            if (topPosition + imagePreview.offsetHeight > viewportHeight + scrollTop) {
+              topPosition = rect.top + scrollTop - imagePreview.offsetHeight - 10;
+            }
+            
+            if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
+              leftPosition = viewportWidth - imagePreview.offsetWidth - 10;
+            }
+            
+            // Đặt vị trí và hiển thị ảnh với animation
+            imagePreview.style.top = `${topPosition}px`;
+            imagePreview.style.left = `${leftPosition}px`;
+            imagePreview.style.display = "block";
+            
+            // Thêm timeout nhỏ để đảm bảo transition hoạt động
+            setTimeout(() => {
+              imagePreview.style.opacity = "1";
+              imagePreview.style.transform = "scale(1)";
+            }, 10);
           }
-      
-          if (leftPosition + imagePreview.offsetWidth > viewportWidth + scrollLeft) {
-            leftPosition = viewportWidth - imagePreview.offsetWidth - 10; // Căn phải
-          }
-      
-          imagePreview.style.top = `${topPosition}px`;
-          imagePreview.style.left = `${leftPosition}px`;
-          imagePreview.style.display = "block"; // Hiển thị hình ảnh
-        }
-      });
-      
+        });
 
-      row.addEventListener("mouseout", () => {
-        // Ẩn hình ảnh khi không hover
-        imagePreview.style.display = "none";
-        imagePreview.classList.remove("show");
+        cell.addEventListener("mouseout", (event) => {
+          const relatedTarget = event.relatedTarget;
+          if (!row.contains(relatedTarget) || 
+              (relatedTarget && relatedTarget.closest('td:last-child'))) {
+            // Ẩn ảnh với animation
+            imagePreview.style.opacity = "0";
+            imagePreview.style.transform = "scale(0.95)";
+            
+            // Đợi animation hoàn thành rồi mới ẩn hoàn toàn
+
+              imagePreview.style.display = "none";
+          }
+        });
       });
     });
 
-
-
-
-    // Hiển thị dữ liệu bảng con trong card (bao gồm hình ảnh)
+    // Hiển thị dữ liệu bảng con trong card
     childCards.innerHTML = children.map(child => `
       <div class="card" data-id="${child._id}">
         <div class="card-header">
           <span class="date">${new Date(child.ngayThang).toLocaleDateString()}</span>
           <span class="location">${child.diaDiem || "Không có địa điểm"}</span>
         </div>
-        <div class="card-content">
+        <div class="card-content expandable">
           <span class="content">${child.noiDung}</span>
           <span class="price">${child.giaTien.toLocaleString()} VND</span>
         </div>
@@ -239,24 +266,34 @@ const showChildView = async (parentId) => {
       </div>
     `).join("");
 
-    // Thêm cơ chế mở rộng khi nhấn vào card
-    document.querySelectorAll(".card").forEach((card) => {
-      card.addEventListener("click", (e) => {
-        // Ngăn chặn sự kiện click từ các nút bên trong card
-        if (e.target.tagName.toLowerCase() === 'button') return;
-
+    // Thêm cơ chế mở rộng chỉ khi nhấn vào nội dung
+    document.querySelectorAll(".card-content.expandable").forEach((content) => {
+      content.addEventListener("click", (e) => {
+        // Ngăn chặn sự kiện nổi bọt
+        e.stopPropagation();
+        
+        const card = content.closest('.card');
         const details = card.querySelector(".card-details");
+        
+        // Toggle hiệu ứng
         if (details.style.display === "block") {
-          details.style.display = "none"; // Thu nhỏ lại nếu đã mở
+          details.style.opacity = "0";
+          details.style.transform = "translateY(-10px)";
+
+            details.style.display = "none";
         } else {
-          details.style.display = "block"; // Mở rộng card
+          details.style.display = "block";
+          // Đợi một chút để animation hoạt động
+          setTimeout(() => {
+            details.style.opacity = "1";
+            details.style.transform = "translateY(0)";
+          }, 10);
         }
       });
     });
 
   } catch (error) {
-    console.error("Lỗi khi tải bảng con hoặc bảng cha:", error);
-    alert("Lỗi khi tải dữ liệu bảng con hoặc bảng cha.");
+    showNotification("Lỗi khi tải dữ liệu bảng con hoặc bảng cha.", "warning");
     // Hiển thị thông báo lỗi trên UI nếu cần
     childTable.innerHTML = `<tr><td colspan="7">Lỗi khi tải dữ liệu bảng con.</td></tr>`;
     childCards.innerHTML = `<p>Lỗi khi tải dữ liệu bảng con.</p>`;
@@ -276,155 +313,220 @@ parentForm.addEventListener("submit", async (e) => {
     });
 
     if (response.ok) {
-      alert("Thêm bảng cha thành công!");
+      showNotification("Thêm bảng cha thành công!", "success");
       closeModalFunc(addParentModal);
       parentForm.reset();
       fetchParentExpenses();
     } else {
       const errorData = await response.json();
-      alert(`Lỗi khi thêm bảng cha: ${errorData.message || "Unknown error."}`);
+      showNotification("Lỗi khi thêm bảng cha!", "warning");
     }
   } catch (error) {
     console.error("Lỗi khi thêm bảng cha:", error);
-    alert("Lỗi khi thêm bảng cha.");
+    showNotification("Lỗi khi thêm bảng cha!", "warning");
   }
+});
+
+// Thêm sự kiện cho input giá tiền
+document.getElementById('childPrice').addEventListener('input', function(e) {
+  formatCurrency(this);
 });
 
 
 childForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // Lấy dữ liệu từ form
-  const parentId = parentDetails.dataset.id;
-  const ngayThang = document.getElementById("childDate").value.trim();
-  const noiDung = document.getElementById("childContent").value.trim();
-  const giaTienValue = document.getElementById("childPrice").value.trim();
-  const giaTien = giaTienValue ? parseFloat(giaTienValue) : null;
-  const diaDiem = document.getElementById("childLocation").value.trim();
-  const ghiChu = document.getElementById("childNote").value.trim();
-  const hinhAnhInput = document.getElementById("childImage").files[0];
-
-  // Log dữ liệu trước khi gửi
-  console.log("Dữ liệu gửi lên:", { parentId, ngayThang, noiDung, giaTien, diaDiem, ghiChu });
-
-  // Kiểm tra dữ liệu bắt buộc
-  if (!parentId || !ngayThang || !noiDung || giaTien == null || !diaDiem) {
-    alert("Vui lòng điền đầy đủ thông tin chi phí.");
-    return;
-  }
-
-  if (isNaN(giaTien) || giaTien <= 0) {
-    alert("Vui lòng nhập một giá tiền hợp lệ.");
-    return;
-  }
-
-  // Đối tượng dữ liệu để gửi
-  const payload = {
-    ngayThang,
-    noiDung,
-    giaTien,
-    diaDiem,
-    ghiChu,
-  };
-
-  // Nếu đang trong chế độ chỉnh sửa, không thêm maChiPhi
-  if (!isEditingChild) {
-    payload.maChiPhi = parentId;
-  }
-
-  // Log payload để kiểm tra
-  console.log("Payload gửi lên:", payload);
-
   try {
-    let response;
-    let data;
+    showLoading(); // Hiển thị loading khi bắt đầu xử lý
 
-    if (isEditingChild && currentChildId) {
-      // Cập nhật chi phí con
-      response = await fetch(`${apiBaseUrl}/child-expenses/${currentChildId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    // Lấy dữ liệu từ form
+    const parentId = parentDetails.dataset.id;
+    const ngayThang = document.getElementById("childDate").value.trim();
+    const noiDung = document.getElementById("childContent").value.trim();
+    const giaTienStr = document.getElementById("childPrice").value.replace(/[,\.]/g, '');
+    const giaTien = parseInt(giaTienStr, 10);
+    const diaDiem = document.getElementById("childLocation").value.trim();
+    const ghiChu = document.getElementById("childNote").value.trim();
+    const hinhAnhInput = document.getElementById("childImage").files[0];
 
-      if (response.ok) {
-        data = await response.json();
-        alert("Cập nhật thành công!");
-      } else {
-        const errorData = await response.json();
-        alert(`Lỗi khi cập nhật: ${errorData.message || "Unknown error."}`);
-        return;
-      }
-    } else {
-      // Thêm mới chi phí con
-      response = await fetch(`${apiBaseUrl}/child-expenses`, {
+    // Kiểm tra dữ liệu
+    if (!parentId || !ngayThang || !noiDung || !giaTien || !diaDiem) {
+      showNotification("Vui lòng điền đầy đủ thông tin!", "warning");
+      hideLoading();
+      return;
+    }
+
+    // Tạo payload cơ bản
+    const payload = {
+      ngayThang,
+      noiDung,
+      giaTien,
+      diaDiem,
+      ghiChu,
+    };
+
+    if (!isEditingChild) {
+      payload.maChiPhi = parentId;
+    }
+
+    // Xử lý API request
+    const url = isEditingChild && currentChildId 
+      ? `${apiBaseUrl}/child-expenses/${currentChildId}`
+      : `${apiBaseUrl}/child-expenses`;
+
+    const response = await fetch(url, {
+      method: isEditingChild ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error('Lỗi khi lưu dữ liệu');
+
+    const data = await response.json();
+
+    // Upload hình ảnh nếu có
+    if (hinhAnhInput) {
+      const compressedFile = await compressImage(hinhAnhInput);
+      const formData = new FormData();
+      formData.append("image", compressedFile);
+      formData.append("childId", isEditingChild ? currentChildId : data._id);
+
+      const uploadResponse = await fetch(`${apiBaseUrl}/upload-image`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: formData
       });
 
-      if (response.ok) {
-        data = await response.json();
-        alert("Thêm mới thành công!");
-      } else {
-        const errorData = await response.json();
-        alert(`Lỗi khi thêm mới: ${errorData.message || "Unknown error."}`);
-        return;
+      if (!uploadResponse.ok) {
+        showNotification("Lưu dữ liệu thành công, nhưng upload ảnh thất bại!", "warning");
       }
     }
 
-    // Đóng modal và cập nhật giao diện
+    // Xử lý thành công
+    showNotification(
+      isEditingChild ? "Cập nhật thành công!" : "Thêm mới thành công!", 
+      "success"
+    );
+
+    // Reset form và trạng thái
     closeModalFunc(addChildModal);
     showChildView(parentId);
-
-    // Nếu có ảnh, xử lý tiếp
-    if (hinhAnhInput) {
-      const formData = new FormData();
-      formData.append("image", hinhAnhInput); // Tệp hình ảnh
-      formData.append("childId", isEditingChild && currentChildId ? currentChildId : data._id); // ID của chi phí con
-
-      try {
-        const uploadResponse = await fetch(`${apiBaseUrl}/upload-image`, {
-          method: "POST",
-          body: formData, // Gửi dữ liệu FormData
-        });
-      
-        if (uploadResponse.ok) {
-          const uploadData = await uploadResponse.json();
-          alert("Hình ảnh đã được tải lên thành công!");
-          console.log("Hình ảnh đã tải lên:", uploadData.hinhAnh);
-      
-          // Tải lại giao diện để hiển thị hình ảnh đã cập nhật
-          showChildView(parentId);
-        } else {
-          const uploadErrorData = await uploadResponse.json();
-          alert(`Lỗi khi tải hình ảnh: ${uploadErrorData.message || "Unknown error."}`);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tải hình ảnh:", error);
-        alert("Lỗi khi xử lý hình ảnh.");
-      }
-      
-    }
-
-
-    // Reset trạng thái sau khi cập nhật
+    
     if (isEditingChild) {
       isEditingChild = false;
       currentChildId = null;
-    }
-
-    // Reset form sau khi thêm mới
-    if (!isEditingChild) {
+    } else {
       childForm.reset();
     }
+
   } catch (error) {
-    console.error("Lỗi khi xử lý dữ liệu:", error);
-    alert("Lỗi khi xử lý dữ liệu.");
+    console.error("Lỗi:", error);
+    showNotification("Có lỗi xảy ra khi xử lý dữ liệu!", "error");
+  } finally {
+    hideLoading(); // Ẩn loading khi hoàn thành
   }
 });
 
-// Khi nhấn nút sửa, thiết lập trạng thái sửa
+// Thêm hàm nén ảnh
+async function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Giới hạn kích thước tối đa
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+        
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          }));
+        }, 'image/jpeg', 0.7); // Nén với chất lượng 70%
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Thêm CSS cho loading
+const style = document.createElement('style');
+style.textContent = `
+  #loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .loading-spinner {
+    background: white;
+    padding: 20px 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .loading-spinner i {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Thêm hàm hiển thị/ẩn loading
+function showLoading() {
+  const loading = document.createElement('div');
+  loading.id = 'loading';
+  loading.innerHTML = `
+    <div class="loading-spinner">
+      <i class="bi bi-arrow-repeat"></i>
+      <span>Đang xử lý...</span>
+    </div>
+  `;
+  document.body.appendChild(loading);
+}
+
+function hideLoading() {
+  const loading = document.getElementById('loading');
+  if (loading) loading.remove();
+}
+
 document.addEventListener("click", async (event) => {
   if (event.target.classList.contains("edit-btn")) {
     const childId = event.target.dataset.id;
@@ -461,14 +563,28 @@ document.addEventListener("click", async (event) => {
       // Mở modal sửa
       openModal(addChildModal);
     } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu:", error.message);
-      alert("Lỗi khi lấy dữ liệu chi phí con.");
+      showNotification("Lỗi khi lấy dữ liệu chi phí con!", "warning");
     }
   }
+});
 
-  // Khi nhấn nút xoá, xử lý xoá chi phí con
-  if (event.target.classList.contains("delete-btn")) {
-    const childId = event.target.dataset.id;
+// Tải danh sách bảng cha khi trang tải
+document.addEventListener("DOMContentLoaded", fetchParentExpenses);
+
+
+
+// Thêm event listener cho các nút trong bảng
+document.addEventListener("click", async (event) => {
+  const target = event.target;
+  
+  // Kiểm tra nếu click vào icon hoặc nút delete
+  if (target.classList.contains("delete-btn") || 
+      (target.parentElement && target.parentElement.classList.contains("delete-btn"))) {
+    
+    // Lấy button delete (có thể là target hoặc parent của icon)
+    const deleteBtn = target.classList.contains("delete-btn") ? target : target.parentElement;
+    const childId = deleteBtn.dataset.id;
+    
     console.log("Nhấn nút Xóa cho chi phí con ID:", childId);
     if (!childId) {
       console.error("Không tìm thấy ID để xoá.");
@@ -482,37 +598,155 @@ document.addEventListener("click", async (event) => {
         });
 
         if (response.ok) {
-          alert("Xoá thành công!");
+          showNotification("Xoá thành công!", "success");
+          // Refresh lại danh sách sau khi xóa
           showChildView(parentDetails.dataset.id);
         } else if (response.status === 404) {
-          alert("Không tìm thấy dữ liệu để xoá.");
+          showNotification("Không tìm thấy dữ liệu để xoá!", "error");
         } else {
-          const errorData = await response.json();
-          alert(`Lỗi khi xoá dữ liệu: ${errorData.message || "Unknown error."}`);
+          showNotification("Lỗi khi xoá dữ liệu!", "error");
         }
       } catch (error) {
-        console.error("Lỗi khi xoá:", error);
-        alert("Lỗi khi xoá chi phí con.");
+        showNotification("Lỗi khi xoá chi phí con!", "error");
       }
     }
   }
 });
 
-// Tải danh sách bảng cha khi trang tải
-document.addEventListener("DOMContentLoaded", fetchParentExpenses);
+// Hàm hiển thị thông báo
+function showNotification(message, type = 'info', duration = 3000) {
+  const container = document.getElementById('notification-container');
+  
+  // Tạo thông báo mới
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  
+  // Thêm icon tương ứng với loại thông báo
+  let icon = '';
+  switch(type) {
+      case 'success':
+          icon = '<i class="bi bi-check-circle"></i>';
+          break;
+      case 'error':
+          icon = '<i class="bi bi-x-circle"></i>';
+          break;
+      case 'warning':
+          icon = '<i class="bi bi-exclamation-triangle"></i>';
+          break;
+      default:
+          icon = '<i class="bi bi-info-circle"></i>';
+  }
+  
+  notification.innerHTML = `${icon} ${message}`;
+  
+  // Thêm vào container
+  container.appendChild(notification);
+  
+  // Hiển thị với animation
+  setTimeout(() => {
+      notification.classList.add('show');
+  }, 10);
+  
+  // Tự động ẩn sau duration
+  setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+          container.removeChild(notification);
+      }, 300);
+  }, duration);
+}
 
-// Kiểm tra đăng nhập
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
 
-  if (username === "nhocac" && password === "mges@@@110994") {
-    // Đăng nhập thành công
-    document.getElementById("loginModal").style.display = "none";
-    document.getElementById("mainContent").style.display = "block";
+
+// Thông tin đăng nhập CHƯA mã hóa để test
+const CREDENTIALS = {
+  username: "nhocac",
+  password: "mges@@@110994"
+};
+
+// Xử lý đăng nhập
+document.addEventListener('DOMContentLoaded', function() {
+  // Kiểm tra các elements tồn tại
+  const loginForm = document.getElementById('loginForm');
+  const loginModal = document.getElementById('loginModal');
+  const mainContent = document.getElementById('mainContent');
+  const loginError = document.getElementById('loginError');
+
+  if (!loginForm || !loginModal || !mainContent || !loginError) {
+      console.error('Không tìm thấy các elements cần thiết');
+      return;
+  }
+
+  // Thông tin đăng nhập
+  const CREDENTIALS = {
+      username: "nhocac",
+      password: "mges@@@110994"
+  };
+
+  // Kiểm tra trạng thái đăng nhập
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+  if (isLoggedIn) {
+      loginModal.style.display = 'none';
+      mainContent.style.display = 'block';
   } else {
-    // Đăng nhập thất bại
-    document.getElementById("loginError").style.display = "block";
+      loginModal.style.display = 'flex'; // Thay đổi từ 'block' sang 'flex'
+      mainContent.style.display = 'none';
+  }
+
+  // Xử lý đăng nhập
+  loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      console.log('Form submitted');
+
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+
+      if (!usernameInput || !passwordInput) {
+          console.error('Không tìm thấy input fields');
+          return;
+      }
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      console.log('Thông tin đăng nhập:', { username, password });
+
+      if (username === CREDENTIALS.username && 
+          password === CREDENTIALS.password) {
+          
+          loginModal.style.display = 'none';
+          mainContent.style.display = 'block';
+          localStorage.setItem('isLoggedIn', 'true');
+          
+          if (typeof showNotification === 'function') {
+              showNotification("Đăng nhập thành công!", "success");
+          } else {
+              alert("Đăng nhập thành công!");
+          }
+      } else {
+          console.log('Đăng nhập thất bại');
+          loginError.style.display = 'block';
+          
+          if (typeof showNotification === 'function') {
+              showNotification("Sai thông tin đăng nhập!", "error");
+          }
+      }
+  });
+
+  // Thêm nút đăng xuất nếu cần
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+      logoutBtn.addEventListener('click', function() {
+          localStorage.removeItem('isLoggedIn');
+          loginModal.style.display = 'flex';
+          mainContent.style.display = 'none';
+          loginForm.reset();
+          loginError.style.display = 'none';
+          
+          if (typeof showNotification === 'function') {
+              showNotification("Đã đăng xuất!", "info");
+          }
+      });
   }
 });

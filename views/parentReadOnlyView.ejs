@@ -1,101 +1,134 @@
-<!-- views/parentReadOnlyView.ejs -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Chi Tiết Bảng Cha (Read-Only)</title>
-  <link rel="stylesheet" href="/styles.css">
-  <style>
-    /* Các kiểu bổ sung nếu cần */
-    #imagePreview {
-      position: absolute;
-      max-width: 600px;
-      max-height: 600px;
-      border: 1px solid #ddd;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: none;
-      z-index: 1000;
-      transition: opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    #imagePreview.show {
-      opacity: 1;
-    }
-        /* Thêm một số kiểu cho tổng tiền */
-    .total-amount p {
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 1.2em;
-    text-align: right;
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Chi Phí Đi Lại</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-  <h1>Báo cáo chi phí đi lại</h1>
+    <div class="report-container">
+        <div class="pdf-button">
+          <button onclick="generatePDF()" class="btn-download-pdf">
+              <i class="bi bi-file-pdf"></i> Tải PDF
+          </button>
+        </div>
+        <!-- Watermark -->
+        <div class="report-watermark">BÁO CÁO CHI PHÍ</div>
+        
+        <!-- Header -->
+        <div class="report-header">
+            <h1>Báo Cáo Chi Phí Đi Lại</h1>
+            <p class="report-subtitle">Công ty Công Nghệ Việt</p>
+        </div>
+        
+        <!-- Thông tin báo cáo -->
+        <div class="report-info">
+            <div class="date-range">
+                <div class="info-item">
+                    <label>Từ ngày:</label>
+                    <span>
+                        <%= ("0" + parent.ngayBatDau.getDate()).slice(-2) %>/
+                        <%= ("0" + (parent.ngayBatDau.getMonth() + 1)).slice(-2) %>/
+                        <%= parent.ngayBatDau.getFullYear() %>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <label>Đến ngày:</label>
+                    <span>
+                        <% if (parent.ngayKetThuc) { %>
+                            <%= ("0" + parent.ngayKetThuc.getDate()).slice(-2) %>/
+                            <%= ("0" + (parent.ngayKetThuc.getMonth() + 1)).slice(-2) %>/
+                            <%= parent.ngayKetThuc.getFullYear() %>
+                        <% } else { %>
+                            Chưa xác định
+                        <% } %>
+                    </span>
+                </div>
+            </div>
+            <div class="report-meta">
+                <div class="info-item">
+                    <label>Mã báo cáo:</label>
+                    <span>#<%= parent._id.toString().slice(-6).toUpperCase() %></span>
+                </div>
+            </div>
+        </div>
 
-  <div class="parent-details">
-    <p><strong>Từ ngày:</strong> 
-      <%= ("0" + parent.ngayBatDau.getDate()).slice(-2) %>/
-      <%= ("0" + (parent.ngayBatDau.getMonth() + 1)).slice(-2) %>/
-      <%= parent.ngayBatDau.getFullYear() %>
-    </p>
-    <p><strong>Đến ngày:</strong> 
-      <% if (parent.ngayKetThuc) { %>
-        <%= ("0" + parent.ngayKetThuc.getDate()).slice(-2) %>/
-        <%= ("0" + (parent.ngayKetThuc.getMonth() + 1)).slice(-2) %>/
-        <%= parent.ngayKetThuc.getFullYear() %>
-      <% } else { %>
-        Chưa xác định
-      <% } %>
-    </p>
-  </div>
+        <!-- Bảng chi tiết -->
+        <div class="childTable">
+            <% if (children.length > 0) { %>
+                <table class="child-table" id="childTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Ngày Tháng</th>
+                            <th>Nội Dung</th>
+                            <th>Giá Tiền</th>
+                            <th>Địa Điểm</th>
+                            <th>Ghi Chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                        let totalAmount = 0;
+                        children.forEach((child, index) => { 
+                            totalAmount += child.giaTien;
+                        %>
+                            <tr data-hinh-anh="<%= child.hinhAnh %>">
+                                <td><%= index + 1 %></td>
+                                <td>
+                                    <%= ("0" + child.ngayThang.getDate()).slice(-2) %>/
+                                    <%= ("0" + (child.ngayThang.getMonth() + 1)).slice(-2) %>/
+                                    <%= child.ngayThang.getFullYear() %>
+                                </td>
+                                <td><%= child.noiDung %></td>
+                                <td class="amount"><%= child.giaTien.toLocaleString('vi-VN') %> ₫</td>
+                                <td><%= child.diaDiem %></td>
+                                <td><%= child.ghiChu %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
 
-  <div class="child-expenses">
-    <% if (children.length > 0) { %>
-      <table class="child-table" id="childTable">
-        <thead>
-          <tr>
-            <th>Ngày Tháng</th>
-            <th>Nội Dung</th>
-            <th>Giá Tiền</th>
-            <th>Địa Điểm</th>
-            <th>Ghi Chú</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% 
-          let totalAmount = 0; // Khởi tạo tổng tiền
-          children.forEach(child => { 
-            totalAmount += child.giaTien; // Cộng giaTien vào tổng
-          %>
-            <tr data-hinh-anh="<%= child.hinhAnh %>">
-              <td>
-                <%= ("0" + child.ngayThang.getDate()).slice(-2) %>/
-                <%= ("0" + (child.ngayThang.getMonth() + 1)).slice(-2) %>/
-                <%= child.ngayThang.getFullYear() %>
-              </td>
-              <td><%= child.noiDung %></td>
-              <td><%= child.giaTien.toLocaleString('vi-VN') %> VND</td>
-              <td><%= child.diaDiem %></td>
-              <td><%= child.ghiChu %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-      <!-- Hiển thị tổng tiền -->
-      <div class="total-amount">
-        <p>Tổng Tiền: <%= totalAmount.toLocaleString('vi-VN') %> VND</p>
-      </div>
-    <% } else { %>
-      <p>Không có chi phí nào thuộc bảng cha này.</p>
-    <% } %>
-    
-  </div>
+                <!-- Tổng kết -->
+                <div class="report-summary">
+                    <div class="total-amount">
+                        <span class="label">Tổng chi phí:</span>
+                        <strong><%= totalAmount.toLocaleString('vi-VN') %> ₫</strong>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="no-data">
+                    <i class="bi bi-inbox"></i>
+                    <p>Không có dữ liệu chi phí</p>
+                </div>
+            <% } %>
+        </div>
 
-  <!-- Thẻ hình ảnh duy nhất để hiển thị khi hover -->
-  <img id="imagePreview" src="" alt="Hình ảnh chi tiết">
+        <!-- Footer -->
+        <div class="report-footer">
+            <div class="signature-section">
+                <div class="signature-box">
+                    <p class="title">Người lập báo cáo</p>
+                    <p class="sign">(Ký và ghi rõ họ tên)</p>
+                </div>
+                <div class="signature-box">
+                    <p class="title">Người phê duyệt</p>
+                    <p class="sign">(Ký và ghi rõ họ tên)</p>
+                </div>
+            </div>
+            <div class="report-timestamp">
+                <p>Ngày xuất báo cáo: <%= new Date().toLocaleDateString('vi-VN') %></p>
+                <p>Mã tham chiếu: <%= parent._id %></p>
+            </div>
+        </div>
+    </div>
 
-  <script src="/scriptReadOnly.js"></script>
+    <!-- Preview Image Modal -->
+    <img id="imagePreview" src="" alt="Hình ảnh chi tiết">
+
+    <script src="/scriptReadOnly.js"></script>
 </body>
 </html>

@@ -3,7 +3,9 @@ body {
   font-family: 'Segoe UI', Arial, sans-serif;  /* font chữ hiện đại hơn */
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);  /* gradient nhẹ nhàng */
+  background: #6a11cb;
+  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
   min-height: 100vh;  /* đảm bảo gradient phủ toàn màn hình */
   color: #2c3e50;  /* màu chữ đậm hơn */
 }
@@ -34,18 +36,202 @@ body::before {
   pointer-events: none;
 }
 
+.content p{
+  color: white;
+}
+
+/* Container chính */
 .container {
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
   padding: 20px;
 }
 
-.content {
-  position: relative;
+/* Header section */
+.container .container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  justify-content: flex-start;
+  margin-bottom: 30px;
+  padding: 15px 0;
+  border-bottom: 2px solid #eef2f7;
+  gap: 15px; /* Khoảng cách giữa các phần tử */
+}
+
+/* Tiêu đề */
+.container h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+  margin-right: auto; /* Đẩy tiêu đề về bên trái */
+}
+
+/* Nhóm các nút bên phải */
+.button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Nút thêm mới */
+.icon-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon-button:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Nút đăng xuất */
+#logoutBtn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#logoutBtn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Icon styles */
+.icon-button i,
+#logoutBtn i {
+  font-size: 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container .container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .container h2 {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .button-group {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Bảng */
+#parentView {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 20px;
+  position: relative;
+}
+
+#parentTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+#parentTable thead {
+  background: #f8f9fa;
+}
+
+#parentTable th {
+  padding: 15px;
+  text-align: left;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+#parentTable td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eef2f7;
+  color: #2c3e50;
+}
+
+#parentTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .container h2 {
+    font-size: 20px;
+  }
+  
+  #parentView {
+    padding: 15px;
+    overflow-x: auto;
+  }
+  
+  #parentTable th,
+  #parentTable td {
+    padding: 10px;
+  }
+  
+}
+
+/* Animation cho các nút */
+.icon-button, #logoutBtn {
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-button::after, #logoutBtn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255,255,255,.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.icon-button:focus:not(:active)::after, 
+#logoutBtn:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(30, 30);
+    opacity: 0;
+  }
 }
 
 .float-right {
@@ -106,80 +292,238 @@ table tr:hover {
   display: none !important; /* Ensure this overrides any conflicting styles */
 }
 
-/* Modal Styles */
-.modal,
+/* Modal fullscreen */
 .modal-fullscreen {
-  display: none;
   position: fixed;
+  background: rgba(0, 0, 0, 0.5);
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal .modal-content,
+.modal-fullscreen .modal-content{
+  background: rgba(131, 58, 180, 0.8);
+  background: -webkit-linear-gradient(
+    45deg,
+    rgba(131, 58, 180, 0.8),
+    rgba(253, 29, 29, 0.8),
+    rgba(252, 176, 69, 0.8)
+  );
+  background: linear-gradient(
+    45deg,
+    rgba(131, 58, 180, 0.8),
+    rgba(253, 29, 29, 0.8),
+    rgba(252, 176, 69, 0.8)
+  );
+}
+
 .modal-fullscreen .modal-content {
-  background-color: #fff;
-  padding: 20px;
+  width: calc(100% - 60px); /* Trừ đi 10px cho viền 5px mỗi bên */
+  height: calc(100vh - 60px); /* Trừ đi 10px cho viền 5px trên dưới */
+  margin: 5px; /* Tạo khoảng viền 5px */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 100%;
-  width: 500px;
-  position: relative;
-}
-
-/* Fullscreen Modal */
-.modal-fullscreen {
-  background-color: rgba(0, 0, 0, 0.8); /* Nền mờ */
-}
-
-.modal-fullscreen .modal-content {
-  width: 100%; /* Gần toàn màn hình theo chiều ngang */
-  height: 100%; /* Gần toàn màn hình theo chiều dọc */
-  border-radius: 0;
-  overflow: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   padding: 20px;
+  position: relative;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  color: black;
 }
 
-.modal-fullscreen table {
+/* Nút đóng */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close:hover {
+  color: #dc3545;
+}
+
+/* Header và content */
+.modal-content h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  padding-right: 40px;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eef2f7;
+}
+
+#parentDetails {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* Nút thêm mới */
+#addChildButton {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#addChildButton:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#addChildButton i {
+  font-size: 18px;
+}
+
+/* Bảng chi tiết */
+#childView {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#childTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  flex-grow: 1; /* Đảm bảo table chiếm toàn bộ không gian */
+  margin-bottom: 20px;
 }
 
-.modal-fullscreen th,
-.modal-fullscreen td {
-  border: 1px solid #ddd;
-  padding: 8px;
+#childTable thead {
+  background: #f8f9fa;
+}
+
+#childTable th {
+  padding: 15px;
   text-align: left;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
 }
 
-.modal-fullscreen th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+#childTable td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eef2f7;
+  color: #2c3e50;
 }
 
-/* Close Button */
-.modal-fullscreen .close {
-  position: absolute;
-  top: 20px;
-  right: 50px;
-  font-size: 40px;
-  font-weight: bold;
-  color: #000;
+#childTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Cột actions */
+#childTable th:last-child,
+#childTable td:last-child {
+  text-align: right;
+  width: 100px;
+}
+
+/* Nút trong bảng */
+.edit-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  padding: 5px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.modal-fullscreen .close:hover {
-  color: red;
+.edit-btn i {
+  color: #ffc107;
+}
+
+.delete-btn i {
+  color: #dc3545;
+}
+
+.edit-btn:hover i {
+  color: #e0a800;
+}
+
+.delete-btn:hover i {
+  color: #c82333;
+}
+
+/* Cards view (nếu cần) */
+#childCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+/* Animation */
+.modal-fullscreen.hidden {
+  display: none;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-fullscreen:not(.hidden) .modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-fullscreen .modal-content {
+    width: calc(100% - 60px); /* Viền nhỏ hơn trên mobile */
+    height: calc(100vh - 60px);
+    margin: 3px;
+    padding: 15px;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  #addChildButton {
+    align-self: flex-end;
+  }
+
+  #childTable {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .close {
+    right: 15px;
+    top: 15px;
+  }
 }
 
 /* Nội dung modal */
@@ -394,36 +738,20 @@ form button:hover {
   margin: 0 auto;  /* Thêm margin auto để căn giữa */
 }
 
-#imagePreview {
-  position: absolute !important;
-  max-width: 600px;
-  max-height: 600px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: none;
-  z-index: 1000;
-  margin-top: 10px;
-  transition: opacity 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà */
-  opacity: 0;
-}
 
-#imagePreview[style*="display: block"] {
-  opacity: 1;
-}
-
-/* CSS cho phần đăng nhập */
+/* CSS cho modal login - Giữ lại phần này */
 .modal-login {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background: #6a11cb;
   background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
   background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
   display: flex;
-  justify-content: center; /* Căn giữa theo chiều ngang */
-  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
@@ -432,63 +760,66 @@ form button:hover {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 400px;
-  max-width: 90%; /* Thay đổi để phù hợp với di động */
-  padding: 20px;
-  text-align: center;
+  max-width: 90%;
+  padding: 30px;
+  text-align: left;
 }
 
-.modal-content header h2 {
-  font-size: 1.5rem;
+.modal-login-content .form-group {
   margin-bottom: 20px;
-  color: #333;
+  width: 100%; /* Đảm bảo form-group full width */
 }
 
+.modal-login-content label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+  width: 100%; /* Label full width */
+}
+
+.modal-login-content .form-control {
+  width: 100%; /* Input full width */
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* Quan trọng - tính padding vào width */
+}
+
+.modal-login-content .btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #6a11cb;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Thêm style cho form */
 #loginForm {
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: stretch; /* Căn đều các phần tử */
   gap: 15px; /* Khoảng cách giữa các phần tử */
 }
 
-#loginForm label {
-  font-weight: bold;
-  color: #555;
-  text-align: left; /* Căn trái cho nhãn */
-}
-
-#loginForm input {
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-#loginForm input:focus {
-  outline: none;
-  border-color: #007bff; /* Màu xanh khi focus */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-#loginForm button {
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#loginForm button:hover {
-  background-color: #0056b3;
-}
-
-#loginError {
-  font-size: 0.9rem;
-  margin-top: 10px;
-  color: red;
-  display: none; /* Mặc định ẩn */
+/* Điều chỉnh responsive */
+@media (max-width: 480px) {
+  .modal-login-content {
+    width: 85%;
+    padding: 20px;
+  }
+  
+  .modal-login-content .form-control {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
 
 /* Kiểu nút với biểu tượng */
@@ -567,4 +898,87 @@ form button:hover {
 
 .delete-btn:hover {
   color: #c82333;  /* màu đỏ đậm khi hover */
+}
+
+#imagePreview {
+  position: absolute;
+  max-width: 600px;
+  max-height: 600px;
+  border: 1px solid #ddd;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(0.95);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.98);
+}
+
+#imagePreview.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.card-content.expandable {
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.card-content.expandable:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.card-details {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#notification-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification {
+  padding: 15px 25px;
+  border-radius: 15px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.notification.success {
+  background-color: #4CAF50;
+}
+
+.notification.error {
+  background-color: #f44336;
+}
+
+.notification.warning {
+  background-color: #ff9800;
+}
+
+.notification.info {
+  background-color: #2196F3;
 }
