@@ -1,7 +1,7 @@
 // public/script.js
 
-// const apiBaseUrl = "https://chiphidilai.vercel.app/api";
-const apiBaseUrl = "http://localhost:3000/api";
+const apiBaseUrl = "https://chiphidilai.vercel.app/api";
+// const apiBaseUrl = "http://localhost:3000/api";
 
 // Các biến trạng thái
 let isEditingChild = false;
