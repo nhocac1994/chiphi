@@ -820,4 +820,188 @@ body {
   .notification.info {
     background-color: #2196F3;
   }
+  /* Content của modal */
+.modal .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    min-height: min-content; /* Chiều cao tối thiểu theo nội dung */
+    height: auto; /* Tự động theo nội dung */
+    max-height: 90vh; /* Giới hạn chiều cao tối đa */
+    margin: auto;
+    position: relative;
+    overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+    display: flex;
+    flex-direction: column;
+  }
   
+  /* Header của modal */
+  .modal header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .modal h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  /* Nút đóng */
+  .modal .close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s ease;
+  }
+  
+  .modal .close:hover {
+    color: #333;
+  }
+  
+  /* Form style */
+  .modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .modal label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .modal input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .modal input:focus {
+    border-color: #4a00e0;
+    outline: none;
+  }
+  
+  .modal input[type="file"] {
+    padding: 8px;
+  }
+  
+  /* Button style */
+  .modal button[type="submit"] {
+    background: linear-gradient(45deg, #8e2de2, #4a00e0);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal button[type="submit"]:hover {
+    opacity: 0.9;
+  }
+  
+  /* Image preview */
+  #imagePreview {
+    margin-top: 15px;
+    border-radius: 8px;
+  }
+  
+  /* Animation cho modal */
+  @keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(100%); /* Bắt đầu từ dưới màn hình */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Di chuyển lên vị trí hiện tại */
+    }
+  }
+  
+  /* Thêm animation cho modal content */
+  .modal .modal-content {
+    animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Thêm cubic-bezier để animation mượt mà hơn */
+  }
+  
+  /* Animation khi đóng modal (tùy chọn) */
+  @keyframes modalFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+  }
+  
+  .modal.hidden .modal-content {
+    animation: modalFadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .modal {
+        padding: 10px;
+    }
+  
+    .modal .modal-content {
+        width: 100%;
+        margin: 5px;
+        max-height: 100%; /* Giảm chiều cao tối đa trên mobile */
+    }
+  
+    .modal h2 {
+        font-size: 18px;
+    }
+  
+    .modal input {
+        font-size: 16px; /* Ngăn zoom trên iOS */
+    }
+  
+    .modal button[type="submit"] {
+        padding: 14px;
+        font-size: 16px;
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .modal .modal-content {
+        background: #1a1a1a;
+    }
+  
+    .modal h2 {
+        color: #fff;
+    }
+  
+    .modal label {
+        color: #ccc;
+    }
+  
+    .modal input {
+        background: #2d2d2d;
+        border-color: #444;
+        color: #fff;
+    }
+  
+    .modal .close {
+        color: #999;
+    }
+  
+    .modal .close:hover {
+        color: #fff;
+    }
+  }

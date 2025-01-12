@@ -106,53 +106,127 @@
     </div>
 
     <!-- Modal nhập liệu bảng cha -->
+        <!-- <div id="addParentModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" data-modal="addParentModal">&times;</span>
+              <header>
+              <h2>Thêm bảng cha</h2>
+              </header>
+            <div class="modal-body">
+              <form id="parentForm">
+              <label for="parentStartDate">Ngày bắt đầu</label>
+              <input type="date" id="parentStartDate" required>
+              <button type="submit">Lưu</button>
+              </form>
+            </div>
+        </div> -->
+
+    <!-- Modal nhập liệu bảng con -->
+    <!-- <div id="addChildModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" data-modal="addChildModal">&times;</span>
+                <header>
+                <h2>Thêm bảng con</h2>
+                </header>
+                <form id="childForm">
+                <label for="childDate">Ngày tháng</label>
+                <input type="date" id="childDate" required>
+                
+                <label for="childContent">Nội dung</label>
+                <input type="text" id="childContent" required>
+                
+                <label for="childPrice">Giá tiền</label>
+                <input type="text" id="childPrice" required>
+                
+                <label for="childLocation">Địa điểm</label>
+                <input type="text" id="childLocation" required>
+                
+                <label for="childNote">Ghi chú</label>
+                <input type="text" id="childNote">
+                
+                <label for="childImage">Hình ảnh</label>
+                <input type="file" id="childImage" name="image" accept="image/*">
+                
+                <button type="submit">Lưu</button>
+                </form>
+                <img id="imagePreview" style="display: none; position: absolute; max-width: 300px; max-height: 300px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
+            </div>
+    </div> -->
+
+
+    <!-- Modal nhập liệu bảng cha -->
     <div id="addParentModal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close" data-modal="addParentModal">&times;</span>
-        <header>
-        <h2>Thêm bảng cha</h2>
-        </header>
-        <form id="parentForm">
-        <label for="parentStartDate">Ngày bắt đầu</label>
-        <input type="date" id="parentStartDate" required>
-        <button type="submit">Lưu</button>
-        </form>
-    </div>
+      <div class="modal-content-upload">
+          <div class="modal-upload">
+              <h2>Thêm bảng cha</h2>
+              <span class="close" data-modal="addParentModal">&times;</span>
+          </div>
+          <div class="modal-body-upload">
+              <form id="parentForm">
+                  <div class="form-group-upload">
+                      <label for="parentStartDate">Ngày bắt đầu</label>
+                      <input type="date" id="parentStartDate" required>
+                  </div>
+                  <div class="form-actions-upload">
+                      <button type="submit" class="btn-submit">Lưu</button>
+                  </div>
+              </form>
+          </div>
+      </div>
     </div>
 
     <!-- Modal nhập liệu bảng con -->
     <div id="addChildModal" class="modal hidden">
-    <div class="modal-content">
-        <span class="close" data-modal="addChildModal">&times;</span>
-        <header>
-        <h2>Thêm bảng con</h2>
-        </header>
-        <form id="childForm">
-        <label for="childDate">Ngày tháng</label>
-        <input type="date" id="childDate" required>
-        
-        <label for="childContent">Nội dung</label>
-        <input type="text" id="childContent" required>
-        
-        <label for="childPrice">Giá tiền</label>
-        <input type="text" id="childPrice" required>
-        
-        <label for="childLocation">Địa điểm</label>
-        <input type="text" id="childLocation" required>
-        
-        <label for="childNote">Ghi chú</label>
-        <input type="text" id="childNote">
-        
-        <label for="childImage">Hình ảnh</label>
-        <input type="file" id="childImage" name="image" accept="image/*">
-        
-        <button type="submit">Lưu</button>
-        </form>
-        <img id="imagePreview" style="display: none; position: absolute; max-width: 300px; max-height: 300px; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1000;">
-    </div>
-    </div>
+      <div class="modal-content-upload">
+          <div class="modal-upload">
+              <h2>Thêm bảng con</h2>
+              <span class="close" data-modal="addChildModal">&times;</span>
+          </div>
+          <div class="modal-body-upload">
+              <form id="childForm">
+                  <div class="form-group">
+                      <label for="childDate">Ngày tháng</label>
+                      <input type="date" id="childDate" required>
+                  </div>
+                  
+                  <div class="form-group-upload">
+                      <label for="childContent">Nội dung</label>
+                      <input type="text" id="childContent" required>
+                  </div>
+                  
+                  <div class="form-group-upload">
+                      <label for="childPrice">Giá tiền</label>
+                      <input type="text" id="childPrice" required>
+                  </div>
+                  
+                  <div class="form-group-upload">
+                      <label for="childLocation">Địa điểm</label>
+                      <input type="text" id="childLocation" required>
+                  </div>
+                  
+                  <div class="form-group-upload">
+                      <label for="childNote">Ghi chú</label>
+                      <input type="text" id="childNote">
+                  </div>
+                  
+                  <div class="form-group-upload">
+                      <label for="childImage">Hình ảnh</label>
+                      <input type="file" id="childImage" name="image" accept="image/*">
+                      <div class="image-preview-container">
+                          <img id="imagePreview" class="hidden">
+                      </div>
+                  </div>
 
+                  <div class="form-actions-upload">
+                      <button type="submit" class="btn-submit">Lưu</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+    </div>
+    
   </div>
+
   <script src="/script.js"></script>
 </body>
 </html>

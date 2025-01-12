@@ -683,14 +683,11 @@ form button:hover {
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .modal-content-upload {
-    width: 95%;
-    padding: 15px;
-  }
 
   form input,
   form button {
     font-size: 14px;
+    max-width: 100%;
   }
 
   .modal-fullscreen .close {
@@ -721,12 +718,11 @@ form button:hover {
     padding: 0;
     margin: 0;
   }
+  
   .card {
       margin: 5px;  /* giảm margin nhỏ hơn nữa với mobile */
       padding: 8px;
   }
-
-
   /* Nếu container có padding */
   .container {
       padding-left: 10px;
@@ -743,6 +739,7 @@ form button:hover {
   flex-wrap: wrap;
   justify-content: center; /* Căn giữa các thẻ */
   gap: 15px;
+
 }
 
 /* Individual Card */
@@ -754,7 +751,6 @@ form button:hover {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
-  background-color: #fff;
   position: relative;
   transition: all 0.3s ease; /* Smooth transition for expanding */
   cursor: pointer;
@@ -1092,120 +1088,206 @@ form button:hover {
   padding: 20px;
 }
 
-/* Content của modal */
-.modal .modal-content {
+/* Modal upload base */
+.modal-content-upload {
   background: white;
-  padding: 25px;
   border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  min-height: min-content; /* Chiều cao tối thiểu theo nội dung */
-  max-height: 60vh; /* Chiều cao tối đa 90% viewport */
+  width: 100%;
+  max-width: 400px;
+  min-height: min-content;
+  height: auto;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  animation: modalFadeIn 0.3s ease;
-  overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+  margin: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Header của modal */
-.modal header {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+
+/* Modal upload header */
+.modal-upload {
+  padding: 20px;
   border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 12px 12px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  max-width: 100%;
 }
 
-.modal h2 {
+.modal-upload h2 {
   margin: 0;
   font-size: 20px;
   color: #333;
+  font-weight: 500;
 }
 
-/* Nút đóng */
-.modal .close {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.3s ease;
+/* Modal upload body */
+.modal-body-upload {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
 }
 
-.modal .close:hover {
-  color: #333;
+/* Form group upload */
+.form-group-upload {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 0;
 }
 
-/* Form style */
-.modal form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.modal label {
+.form-group-upload label {
+  display: block;
   font-size: 14px;
   color: #555;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
-.modal input {
-  padding: 10px 12px;
+.form-group-upload input {
+  margin: 0;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease; 
+  width: 350px;
 }
 
-.modal input:focus {
+.form-group-upload input:focus {
   border-color: #4a00e0;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 0, 224, 0.1);
 }
 
-.modal input[type="file"] {
+.form-group-upload input[type="file"] {
   padding: 8px;
 }
+/* Form container */
+#parentForm,
+#childForm {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Căn đều các phần tử */
+    gap: 15px; /* Khoảng cách giữa các phần tử */
+}
+/* Form actions upload */
+.form-actions-upload {
+  margin-top: 20px;
+  text-align: right;
+}
 
-/* Button style */
-.modal button[type="submit"] {
+/* Image preview container */
+.image-preview-container {
+  margin-top: 10px;
+}
+
+.image-preview-container img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview-container img.show {
+  display: block;
+}
+
+/* Button submit */
+.btn-submit {
   background: linear-gradient(45deg, #8e2de2, #4a00e0);
   color: white;
   border: none;
-  padding: 12px;
+  padding: 12px 24px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.modal button[type="submit"]:hover {
+.btn-submit:hover {
   opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-/* Image preview */
-#imagePreview {
-  margin-top: 15px;
-  border-radius: 8px;
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .modal {
+      padding: 0;
+      margin: 0;
+  }
+
+  .modal-content-upload {
+      margin: 0;
+      max-width: 100%;
+  }
+
+  .modal-body-upload {
+     padding: 15px;
+  }
+
+  .form-group-upload input {
+      font-size: 16px;
+  }
+
+  .btn-submit {
+      width: 100%;
+      padding: 14px;
+  }
 }
 
-/* Animation cho modal */
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .modal-content-upload,
+  .modal-upload {
+      background: #1a1a1a;
+  }
+
+  .modal-upload {
+      border-bottom-color: #333;
+  }
+
+  .modal-upload h2 {
+      color: #fff;
+  }
+
+  .form-group-upload label {
+      color: #ccc;
+  }
+
+  .form-group-upload input {
+      background: #2d2d2d;
+      border-color: #444;
+      color: #fff;
+  }
+
+  .form-group-upload input:focus {
+      border-color: #8e2de2;
+      box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.2);
+  }
+}
+
+/* Animations */
 @keyframes modalFadeIn {
   from {
       opacity: 0;
-      transform: translateY(100%); /* Bắt đầu từ dưới màn hình */
+      transform: translateY(100%);
   }
   to {
       opacity: 1;
-      transform: translateY(0); /* Di chuyển lên vị trí hiện tại */
+      transform: translateY(0);
   }
 }
 
-/* Thêm animation cho modal content */
-.modal .modal-content {
-  animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Thêm cubic-bezier để animation mượt mà hơn */
-}
-
-/* Animation khi đóng modal (tùy chọn) */
 @keyframes modalFadeOut {
   from {
       opacity: 1;
@@ -1217,62 +1299,7 @@ form button:hover {
   }
 }
 
-.modal.hidden .modal-content {
+.modal.hidden .modal-content-upload {
   animation: modalFadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .modal {
-      padding: 0;
-  }
-
-  .modal .modal-content {
-      width: 100%;
-      margin: 5px;
-      max-height: 65vh; /* Giảm chiều cao tối đa trên mobile */
-  }
-
-  .modal h2 {
-      font-size: 18px;
-  }
-
-  .modal input {
-      font-size: 16px; /* Ngăn zoom trên iOS */
-  }
-
-  .modal button[type="submit"] {
-      padding: 14px;
-      font-size: 16px;
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .modal .modal-content {
-      background: #1a1a1a;
-  }
-
-  .modal h2 {
-      color: #fff;
-  }
-
-  .modal label {
-      color: #ccc;
-  }
-
-  .modal input {
-      background: #2d2d2d;
-      border-color: #444;
-      color: #fff;
-  }
-
-  .modal .close {
-      color: #999;
-  }
-
-  .modal .close:hover {
-      color: #fff;
-  }
 }
 
