@@ -740,7 +740,7 @@ form button:hover {
   flex-wrap: wrap;
   justify-content: center; /* Căn giữa các thẻ */
   gap: 15px;
-
+  max-width: 100%;
 }
 
 /* Individual Card */
