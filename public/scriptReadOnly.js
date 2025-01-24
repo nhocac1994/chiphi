@@ -75,6 +75,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+// Xử lý hiển thị hình ảnh
+// document.addEventListener('DOMContentLoaded', function() {
+//   const modal = document.getElementById('imageModal');
+//   const modalImg = document.getElementById('imagePreview');
+//   const closeBtn = document.getElementsByClassName('close')[0];
+  
+//   // Thêm sự kiện click cho các hàng có hình ảnh
+//   document.querySelectorAll('tr[data-hinh-anh]').forEach(row => {
+//       row.addEventListener('click', function() {
+//           const imgSrc = this.getAttribute('data-hinh-anh');
+//           if (imgSrc && imgSrc !== 'undefined' && imgSrc !== 'null') {
+//               modal.style.display = 'block';
+//               modalImg.src = imgSrc;
+//               modal.classList.add('fade-in');
+//           }
+//       });
+//   });
+
+//   // Đóng modal khi click nút close
+//   closeBtn.addEventListener('click', closeModal);
+
+//   // Đóng modal khi click bên ngoài ảnh
+//   modal.addEventListener('click', function(e) {
+//       if (e.target === modal) {
+//           closeModal();
+//       }
+//   });
+
+//   // Đóng modal khi nhấn ESC
+//   document.addEventListener('keydown', function(e) {
+//       if (e.key === 'Escape') {
+//           closeModal();
+//       }
+//   });
+
+//   function closeModal() {
+//       modal.classList.remove('fade-in');
+//       setTimeout(() => {
+//           modal.style.display = 'none';
+//       }, 300);
+//   }
+
+//   // Thêm chỉ báo cho hàng có hình ảnh
+//   document.querySelectorAll('tr[data-hinh-anh]').forEach(row => {
+//       const hasImage = row.getAttribute('data-hinh-anh') && 
+//                       row.getAttribute('data-hinh-anh') !== 'undefined' && 
+//                       row.getAttribute('data-hinh-anh') !== 'null';
+      
+//       if (hasImage) {
+//           const firstCell = row.querySelector('td');
+//           if (firstCell) {
+//               firstCell.innerHTML += ' <i class="bi bi-image" style="color: #666; font-size: 14px;"></i>';
+//           }
+//       }
+//   });
+// });
+
 function generatePDF() {
   // Ẩn nút tạo PDF và watermark khi xuất PDF
   const pdfButton = document.querySelector('.pdf-button');

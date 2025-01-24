@@ -229,21 +229,6 @@ tbody tr:hover {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-
-#imagePreview {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 90vw; /* 90% chiều rộng màn hình */
-  max-height: 80vh; /* 80% chiều cao màn hình */
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 1001;
-  transition: all 0.3s ease;
-}
-
 .modal-preview.show {
   display: flex;
   animation: fadeIn 0.3s ease;
