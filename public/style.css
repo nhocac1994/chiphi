@@ -809,6 +809,23 @@ input[list]::-webkit-calendar-picker-indicator:hover {
       overflow-x: hidden;
       word-wrap: break-word;
       white-space: normal;
+      margin: 0 auto;
+  }
+
+  .card-details .note {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+    margin: 0 auto;
+  }
+
+  .card-details img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: block;
+    margin: 0 auto;  /* Thêm margin auto để căn giữa */
   }
 
   /* Xử lý cho ảnh trong card */
@@ -894,29 +911,7 @@ input[list]::-webkit-calendar-picker-indicator:hover {
   text-align: right;
 }
 
-/* Card details (hidden by default) */
-.card-details {
-  display: none;
-  margin-top: 10px;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
-  margin: 0 auto;
-}
 
-.card-details .note {
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #333;
-}
-
-.card-details img {
-  max-width: 50%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: block;
-  margin: 0 auto;  /* Thêm margin auto để căn giữa */
-}
 
 
 /* CSS cho modal login - Giữ lại phần này */
@@ -1114,6 +1109,7 @@ input[list]::-webkit-calendar-picker-indicator:hover {
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  margin: 0 auto;
 }
 
 #notification-container {
