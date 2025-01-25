@@ -135,15 +135,33 @@
           </div>
           <div class="modal-body-upload">
               <form id="childForm">
-                  <div class="form-group">
+                  <div class="form-group-upload">
                       <label for="childDate">Ngày tháng</label>
                       <input type="date" id="childDate" required>
                   </div>
                   
                   <div class="form-group-upload">
-                      <label for="childContent">Nội dung</label>
-                      <input type="text" id="childContent" required>
-                  </div>
+                    <label for="childContent">Nội dung</label>
+                    <input 
+                        type="text" 
+                        id="childContent" 
+                        list="contentSuggestions"
+                        autocomplete="off"
+                        required
+                    >
+                    <datalist id="contentSuggestions">
+                        <option value="Xăng">
+                        <option value="Ăn">
+                        <option value="Nhà nghỉ">
+                        <option value="Phí cầu đường">
+                        <option value="Phí gửi xe">
+                        <option value="Taxi">
+                        <option value="Vé tàu">
+                        <option value="Vé xe">
+                        <option value="Vé máy bay">
+                        <option value="Chi phí khác">
+                    </datalist>
+                </div>
                   
                   <div class="form-group-upload">
                       <label for="childPrice">Giá tiền</label>
@@ -151,14 +169,84 @@
                   </div>
                   
                   <div class="form-group-upload">
-                      <label for="childLocation">Địa điểm</label>
-                      <input type="text" id="childLocation" required>
-                  </div>
-                  
-                  <div class="form-group-upload">
-                      <label for="childNote">Ghi chú</label>
-                      <input type="text" id="childNote">
-                  </div>
+                    <label for="childLocation">Địa điểm</label>
+                    <input 
+                        type="text" 
+                        id="childLocation" 
+                        list="locationSuggestions"
+                        autocomplete="off"
+                        required
+                    >
+                    <datalist id="locationSuggestions">
+                        <!-- Duyên hải Nam Trung Bộ -->
+                        <option value="Phú Yên">
+                        <option value="Nha Trang">
+                        <option value="Khánh Hòa">
+                        <option value="Ninh Thuận">
+                        <option value="Bình Thuận">
+                        <option value="Phan Thiết">
+
+                        <!-- Đông Nam Bộ -->
+                        <option value="Bà Rịa - Vũng Tàu">
+                        <option value="Đồng Nai">
+                        <option value="Bình Dương">
+                        <option value="Tây Ninh">
+                        <option value="Thành phố Hồ Chí Minh">
+
+                        <!-- Đồng bằng sông Cửu Long -->
+                        <option value="Long An">
+                        <option value="Tiền Giang">
+                        <option value="Bến Tre">
+                        <option value="Trà Vinh">
+                        <option value="Vĩnh Long">
+                        <option value="Đồng Tháp">
+                        <option value="An Giang">
+                        <option value="Kiên Giang">
+                        <option value="Cần Thơ">
+                        <option value="Hậu Giang">
+                        <option value="Sóc Trăng">
+                        <option value="Bạc Liêu">
+                        <option value="Cà Mau">
+
+                        <!-- Thành phố/thị xã chính -->
+                        <option value="Tuy Hòa">
+                        <option value="Phan Rang - Tháp Chàm">
+                        <option value="Vũng Tàu">
+                        <option value="Biên Hòa">
+                        <option value="Thủ Dầu Một">
+                        <option value="Tây Ninh">
+                        <option value="Tân An">
+                        <option value="Mỹ Tho">
+                        <option value="Sa Đéc">
+                        <option value="Cao Lãnh">
+                        <option value="Long Xuyên">
+                        <option value="Châu Đốc">
+                        <option value="Rạch Giá">
+                        <option value="Hà Tiên">
+                        <option value="Sóc Trăng">
+                        <option value="Bạc Liêu">
+                        <option value="Cà Mau">
+                        <option value="Vị Thanh">
+                        <option value="Ngã Bảy">
+                    </datalist>
+                </div>
+                
+                <div class="form-group-upload">
+                    <label for="childNote">Ghi chú</label>
+                    <input 
+                        type="text" 
+                        id="childNote" 
+                        list="noteSuggestions"
+                        autocomplete="off"
+                    >
+                    <datalist id="noteSuggestions">
+                        <option value="2 người">
+                        <option value="3 người">
+                        <option value="4 người">
+                        <option value="Nhiều người">
+                        <option value="Không có">
+                    </datalist>
+                </div>
                   
                   <div class="form-group-upload">
                       <label for="childImage">Hình ảnh</label>
@@ -177,6 +265,22 @@
     </div>
     
   </div>
+  <script>
+    // Tự động điền ngày hiện tại khi trang được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lấy ngày hiện tại
+        const today = new Date();
+        
+        // Format ngày theo định dạng YYYY-MM-DD cho input type="date"
+        const formattedDate = today.toISOString().split('T')[0];
+        
+        // Đặt giá trị cho input
+        document.getElementById('childDate').value = formattedDate;
+        
+        // Tùy chọn: đặt giá trị max là ngày hiện tại để không chọn được ngày tương lai
+        document.getElementById('childDate').max = formattedDate;
+    });
+</script>
 
   <script src="/script.js"></script>
 </body>

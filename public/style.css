@@ -621,16 +621,23 @@ table tr:hover {
   }
 }
 
-/* Nội dung modal */
+/* Modal content */
 .modal-content-upload {
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 500px; /* Giới hạn chiều rộng */
   position: relative;
-  animation: slideDown 0.3s ease-out; /* Hiệu ứng hiển thị */
+  animation: slideDown 0.3s ease-out;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 100%;
+  margin: 0; /* Bỏ margin */
+  box-sizing: border-box; /* Quan trọng */
 }
 
 .modal-content-upload h2 {
@@ -645,11 +652,22 @@ form {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0; /* Bỏ margin */
+  padding: 0; /* Bỏ padding */
 }
 
 form label {
   font-weight: bold;
   margin-bottom: 5px;
+}
+
+form .form-group {
+  width: 100%;
+  max-width: 100%;
+  margin: 0; /* Bỏ margin */
+  padding: 0 10px; /* Thêm padding hai bên nếu cần */
 }
 
 form input,
@@ -658,6 +676,10 @@ form button {
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  width: 100%;
+  max-width: 100%;
+  margin: 0; /* Bỏ margin */
+  box-sizing: border-box; /* Quan trọng: đảm bảo padding không làm tăng width */
 }
 
 form button {
@@ -665,6 +687,9 @@ form button {
   color: white;
   border: none;
   cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  margin: 5px;
 }
 
 form button:hover {
@@ -682,15 +707,67 @@ form button:hover {
     opacity: 1;
   }
 }
+/* Style cho input có list */
+.form-group-upload input[list] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Style cho option khi hover */
+input[list]::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+input[list]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Focus style */
+.form-group-upload input[list]:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
 
 /* Responsive design */
 @media (max-width: 768px) {
-
   form input,
   form button {
-    font-size: 14px;
-    max-width: 100%;
+      font-size: 14px;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 10px;
+      box-sizing: border-box;
   }
+
+  .form-group {
+      padding: 0 10px;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+  }
+
+  .modal-content-upload {
+      margin: 0;
+      padding: 15px;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0; /* Tùy chọn: bỏ bo góc trên mobile */
+  }
+
+  .container {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+  }
+
 
   .modal-fullscreen .close {
     right: 15px;
@@ -710,27 +787,43 @@ form button:hover {
     padding: 0;
     margin: 0;
   }
-
   .card {
     display: block !important;
-    width: 100%; /* Đặt chiều rộng phù hợp */
-    margin: 0 auto; /* Căn giữa thẻ */
+    width: 100%;
+    margin: 0 auto;
     box-sizing: border-box;
     max-width: 100%;
     padding: 0;
     margin: 0;
+    overflow-x: hidden; /* Khóa cuộn ngang */
+    word-wrap: break-word; /* Cho phép từ xuống dòng */
+    white-space: normal; /* Cho phép text xuống dòng */
   }
-  
-  .card {
-      margin: 5px;  /* giảm margin nhỏ hơn nữa với mobile */
-      padding: 8px;
-  }
-  /* Nếu container có padding */
-  .container {
-      padding-left: 10px;
-      padding-right: 10px;
+
+  /* Đảm bảo nội dung bên trong card cũng không bị overflow */
+  .card-content,
+  .card-header,
+  .card-details {
+      width: 100%;
       max-width: 100%;
-      margin: 0;
+      overflow-x: hidden;
+      word-wrap: break-word;
+      white-space: normal;
+  }
+
+  /* Xử lý cho ảnh trong card */
+  .card img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+  }
+
+  /* Xử lý cho text dài */
+  .card * {
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
   }
 
 }
