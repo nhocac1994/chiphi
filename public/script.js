@@ -215,11 +215,15 @@ const showChildView = async (parentId) => {
     if (!parentResponse.ok) {
       throw new Error(`HTTP error! status: ${parentResponse.status}`);
     }
+    // Tính tổng số tiền
+    const totalAmount = children.reduce((sum, child) => sum + child.giaTien, 0);
+
     const parent = await parentResponse.json();
     parentDetails.dataset.id = parentId;
     parentDetails.innerHTML = `
       <p><strong>Ngày bắt đầu:</strong> ${new Date(parent.ngayBatDau).toLocaleDateString()}</p>
       <p><strong>Ngày kết thúc:</strong> ${parent.ngayKetThuc ? new Date(parent.ngayKetThuc).toLocaleDateString() : "Chưa kết thúc"}</p>
+      <p><strong>Tổng số tiền:</strong> ${totalAmount.toLocaleString()} VND</p>
     `;
 
     // Kiểm tra xem children có phải là mảng không
@@ -229,6 +233,7 @@ const showChildView = async (parentId) => {
       childCards.innerHTML = `<p>Không có dữ liệu bảng con.</p>`;
       return;
     }
+
 
     // Hiển thị bảng con trong bảng
     childTable.innerHTML = children.map((child, index) => `
