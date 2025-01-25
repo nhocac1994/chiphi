@@ -224,3 +224,76 @@ function generatePDF() {
       alert('Có lỗi xảy ra khi tạo PDF. Vui lòng thử lại.');
   }
 }
+
+function generateCSV() {
+  try {
+      // Lấy dữ liệu từ bảng
+      const table = document.getElementById('childTable');
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      
+      // Tạo header cho CSV
+      const headers = ['STT', 'Ngày Tháng', 'Nội Dung', 'Giá Tiền', 'Địa Điểm', 'Ghi Chú'];
+      
+      // Tạo nội dung CSV với encoding UTF-8
+      let csvContent = '\ufeff' + headers.join(',') + '\n';
+      
+      let totalAmount = 0;
+
+      // Thêm dữ liệu từ các dòng
+      rows.forEach((row, index) => {
+          const cells = row.getElementsByTagName('td');
+          
+          // Format ngày tháng - gộp thành một chuỗi
+          const dateText = cells[1].textContent.trim().replace(/\s+/g, '');
+          
+          // Lấy nội dung
+          const content = cells[2].textContent.trim();
+          
+          // Xử lý giá tiền - chỉ lấy số
+          const amountText = cells[3].textContent.replace(/[^\d]/g, '');
+          const amount = parseInt(amountText) || 0;
+          totalAmount += amount;
+          
+          // Lấy địa điểm và ghi chú
+          const location = cells[4].textContent.trim();
+          const note = cells[5].textContent.trim();
+          
+          // Thêm dòng vào CSV
+          const row_data = [
+              index + 1,                              // STT
+              dateText,                              // Ngày Tháng
+              `"${content}"`,                        // Nội Dung
+              amount.toLocaleString('vi-VN'),        // Giá Tiền
+              `"${location}"`,                       // Địa Điểm
+              `"${note}"`                            // Ghi Chú
+          ];
+          
+          csvContent += row_data.join(',') + '\n';
+      });
+      
+      // Thêm dòng tổng tiền
+      csvContent += `\nTổng chi phí,,,${totalAmount.toLocaleString('vi-VN')},,\n`;
+      
+      // Tạo Blob và tải xuống
+      const blob = new Blob([csvContent], { 
+          type: 'text/csv;charset=utf-8;' 
+      });
+      
+      // Tạo link tải xuống
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'bao-cao-chi-phi.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      // Thông báo thành công
+      showNotification('Đã tạo file CSV thành công!', 'success');
+      
+  } catch (error) {
+      console.error('Lỗi khi tạo CSV:', error);
+      showNotification('Có lỗi xảy ra khi tạo file CSV!', 'error');
+  }
+}
