@@ -1,138 +1,96 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//   const imagePreview = document.getElementById("imagePreview");
-//   const childTable = document.getElementById("childTable");
 
-//   // Thêm style cho animation
-//   const style = document.createElement('style');
-//   style.textContent = `
-//     #imagePreview {
-//       opacity: 0;
-//       transform: scale(0.95);
-//       transition: all 0.9s ease;
-//       border-radius: 8px;
-//       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-//       border: 2px solid #fff;
-//     }
 
-//     #imagePreview.show {
-//       opacity: 1;
-//       transform: scale(1);
-//     }
-//   `;
-//   document.head.appendChild(style);
-
-//   if (childTable) {
-//     const tableRows = childTable.querySelectorAll("tbody tr");
-//     tableRows.forEach((row) => {
-//       const imageUrl = row.dataset.hinhAnh;
-
-//       row.addEventListener("mouseover", (event) => {
-//         if (imageUrl) {
-//           // Đặt nguồn hình ảnh
-//           imagePreview.src = imageUrl.startsWith("http") ? imageUrl : `${window.location.origin}${imageUrl}`;
-//           imagePreview.alt = "Hình ảnh chi tiết";
-
-//           // Tính toán vị trí của hàng để đặt hình ảnh phía dưới
-//           const rect = row.getBoundingClientRect();
-//           const scrollTop = window.scrollY || window.pageYOffset;
-//           const scrollLeft = window.scrollX || window.pageXOffset;
-
-//           // Kích thước hình ảnh
-//           const imageWidth = 600; // maxWidth
-//           const imageHeight = 600; // maxHeight
-
-//           // Kích thước cửa sổ trình duyệt
-//           const viewportWidth = window.innerWidth;
-
-//           // Tính toán vị trí đặt hình ảnh bên dưới hàng, cách 10px
-//           let topPosition = rect.bottom + scrollTop + 5;
-//           let leftPosition = rect.left + scrollLeft;
-
-//           // Kiểm tra nếu hình ảnh vượt ra ngoài phía phải màn hình
-//           if (leftPosition + imageWidth > scrollLeft + viewportWidth) {
-//             leftPosition = scrollLeft + viewportWidth - imageWidth - 10;
-//           }
-
-//           // Đặt vị trí của hình ảnh
-//           imagePreview.style.top = `${topPosition}px`;
-//           imagePreview.style.left = `${leftPosition}px`;
-//           imagePreview.style.display = "block";
-          
-//           // Thêm animation
-//           requestAnimationFrame(() => {
-//             imagePreview.classList.add("show");
-//           });
-//         }
-//       });
-
-//       row.addEventListener("mouseout", () => {
-//         // Ẩn hình ảnh với animation
-//         imagePreview.classList.remove("show");
-        
-//         // Đợi animation kết thúc rồi mới ẩn hoàn toàn
-//           imagePreview.style.display = "none";
-//       });
-//     });
-//   }
-// });
-
-// Xử lý hiển thị hình ảnh
 document.addEventListener('DOMContentLoaded', function() {
   const modal = document.getElementById('imageModal');
   const modalImg = document.getElementById('imagePreview');
   const closeBtn = document.getElementsByClassName('close')[0];
+  let currentRotation = 0;
+  let currentScale = 1;
   
-  // Thêm sự kiện click cho các hàng có hình ảnh
+  // Thêm container cho modal content
+  modalImg.parentElement.innerHTML = `
+      <div class="modal-container">
+          ${modalImg.outerHTML}
+      </div>
+      <div class="modal-controls">
+          <button class="control-btn zoom-in" title="Phóng to">
+              <i class="bi bi-zoom-in"></i>
+          </button>
+          <button class="control-btn zoom-out" title="Thu nhỏ">
+              <i class="bi bi-zoom-out"></i>
+          </button>
+          <button class="control-btn rotate" title="Xoay">
+              <i class="bi bi-arrow-clockwise"></i>
+          </button>
+      </div>
+  `;
+
+  const container = modal.querySelector('.modal-container');
+  const newModalImg = modal.querySelector('.modal-content');
+  
+  // Xử lý zoom
+  function updateTransform() {
+      newModalImg.style.transform = `rotate(${currentRotation}deg) scale(${currentScale})`;
+  }
+
+  modal.querySelector('.zoom-in').addEventListener('click', () => {
+      currentScale = Math.min(currentScale + 0.5, 4);
+      updateTransform();
+  });
+
+  modal.querySelector('.zoom-out').addEventListener('click', () => {
+      currentScale = Math.max(currentScale - 0.5, 0.5);
+      updateTransform();
+  });
+
+  // Xử lý xoay
+  modal.querySelector('.rotate').addEventListener('click', () => {
+      currentRotation = (currentRotation + 90) % 360;
+      updateTransform();
+  });
+
+  // Double tap để zoom
+  let lastTap = 0;
+  newModalImg.addEventListener('touchend', (e) => {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      if (tapLength < 300 && tapLength > 0) {
+          currentScale = currentScale === 1 ? 2 : 1;
+          updateTransform();
+          e.preventDefault();
+      }
+      lastTap = currentTime;
+  });
+
+  // Reset transform khi đóng modal
+  function closeModal() {
+      currentRotation = 0;
+      currentScale = 1;
+      updateTransform();
+      modal.style.display = 'none';
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target === container) {
+          closeModal();
+      }
+  });
+
+  // Xử lý hiển thị ảnh
   document.querySelectorAll('tr[data-hinh-anh]').forEach(row => {
       row.addEventListener('click', function() {
           const imgSrc = this.getAttribute('data-hinh-anh');
           if (imgSrc && imgSrc !== 'undefined' && imgSrc !== 'null') {
               modal.style.display = 'block';
-              modalImg.src = imgSrc;
-              modal.classList.add('fade-in');
+              newModalImg.src = imgSrc;
+              currentRotation = 0;
+              currentScale = 1;
+              updateTransform();
           }
       });
   });
-
-  // Đóng modal khi click nút close
-  closeBtn.addEventListener('click', closeModal);
-
-  // Đóng modal khi click bên ngoài ảnh
-  modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-          closeModal();
-      }
-  });
-
-  // Đóng modal khi nhấn ESC
-  document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-          closeModal();
-      }
-  });
-
-  function closeModal() {
-      modal.classList.remove('fade-in');
-      setTimeout(() => {
-          modal.style.display = 'none';
-      }, 300);
-  }
-
-  // Thêm chỉ báo cho hàng có hình ảnh
-  document.querySelectorAll('tr[data-hinh-anh]').forEach(row => {
-      const hasImage = row.getAttribute('data-hinh-anh') && 
-                      row.getAttribute('data-hinh-anh') !== 'undefined' && 
-                      row.getAttribute('data-hinh-anh') !== 'null';
-      
-      if (hasImage) {
-          const firstCell = row.querySelector('td');
-          if (firstCell) {
-              firstCell.innerHTML += ' <i class="bi bi-image" style="color: #666; font-size: 14px;"></i>';
-          }
-      }
-  });
 });
-
 function generatePDF() {
   // Ẩn nút tạo PDF và watermark khi xuất PDF
   const pdfButton = document.querySelector('.pdf-button');
