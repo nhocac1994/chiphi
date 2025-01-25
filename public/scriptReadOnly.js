@@ -91,38 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 });
-function generatePDF() {
-  // Ẩn nút tạo PDF và watermark khi xuất PDF
-  const pdfButton = document.querySelector('.pdf-button');
-  const watermark = document.querySelector('.report-watermark');
-  pdfButton.style.display = 'none';
-  if (watermark) watermark.style.display = 'none';
 
-  // Cấu hình cho PDF
-  const element = document.querySelector('.report-container');
-  const opt = {
-      margin: [10, 10, 10, 10],
-      filename: 'bao-cao-chi-phi.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-          scale: 2,
-          useCORS: true,
-          logging: true
-      },
-      jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait'
-      }
-  };
-
-  // Tạo PDF
-  html2pdf().set(opt).from(element).save().then(() => {
-      // Hiện lại nút và watermark sau khi tạo xong
-      pdfButton.style.display = 'block';
-      if (watermark) watermark.style.display = 'block';
-  });
-}
 
 // Thêm xử lý cho việc tải ảnh trong PDF
 document.addEventListener('DOMContentLoaded', function() {
@@ -131,3 +100,127 @@ document.addEventListener('DOMContentLoaded', function() {
       img.crossOrigin = "Anonymous";
   });
 });
+
+function generatePDF() {
+  try {
+    // Lấy dữ liệu từ bảng
+    const table = document.getElementById('childTable');
+    const rows = Array.from(table.getElementsByTagName('tr'));
+    let totalAmount = 0;
+
+        // Lấy và format ngày tháng
+        const dateRange = document.querySelector('.date-range');
+        let startDate = '', endDate = '';
+        
+        if (dateRange) {
+            const startDateSpan = dateRange.querySelector('.info-item:first-child span');
+            const endDateSpan = dateRange.querySelector('.info-item:last-child span');
+            
+            // Format lại ngày tháng để hiển thị trên cùng một hàng
+            startDate = startDateSpan ? startDateSpan.textContent.trim().replace(/\s+/g, '') : '';
+            endDate = endDateSpan ? endDateSpan.textContent.trim().replace(/\s+/g, '') : '';
+        }
+
+    // Chuẩn bị dữ liệu cho bảng
+    const tableBody = rows.slice(1).map(row => {
+        const cells = row.getElementsByTagName('td');
+        const amount = parseInt(cells[3].textContent.replace(/[^\d]/g, '')) || 0;
+        totalAmount += amount;
+        
+        // Format ngày tháng thành một dòng và thay / bằng -
+        const dateText = cells[1].textContent.replace(/\s+/g, '').replace(/\//g, '-');
+        
+        return [
+            { text: cells[0].textContent, alignment: 'center' },
+            { text: dateText, alignment: 'center' },
+            { text: cells[2].textContent, alignment: 'left' },
+            { text: amount.toLocaleString('vi-VN') + ' đ', alignment: 'right' },
+            { text: cells[4].textContent, alignment: 'left' },
+            { text: cells[5].textContent, alignment: 'left' }
+        ];
+    });
+
+      // Định nghĩa document
+      const docDefinition = {
+          pageSize: 'A4',
+          pageOrientation: 'portrait',
+          pageMargins: [20, 20, 20, 20],
+
+          content: [
+              // Tiêu đề
+              {
+                text: 'BÁO CÁO CHI PHÍ ĐI LẠI',
+                fontSize: 16,
+                bold: true,
+                alignment: 'center',
+                margin: [0, 0, 0, 10]
+            },
+            // Thời gian
+            {
+              text: `Từ ngày: ${startDate} - Đến ngày: ${endDate}`,
+              fontSize: 10,
+              alignment: 'center',
+              margin: [0, 0, 0, 15]
+          },
+              // Bảng dữ liệu
+              {
+                  table: {
+                      headerRows: 1,
+                      widths: [30, '*', 80, 80, 80, 80],
+                      body: [
+                          // Header
+                          [
+                              { text: 'STT', style: 'tableHeader' },
+                              { text: 'Ngày Tháng', style: 'tableHeader' },
+                              { text: 'Nội Dung', style: 'tableHeader' },
+                              { text: 'Giá Tiền', style: 'tableHeader' },
+                              { text: 'Địa Điểm', style: 'tableHeader' },
+                              { text: 'Ghi Chú', style: 'tableHeader' }
+                          ],
+                          // Data rows
+                          ...tableBody
+                      ]
+                  },
+                  layout: {
+                      hLineWidth: function(i, node) { return 0.5; },
+                      vLineWidth: function(i, node) { return 0.5; },
+                      hLineColor: function(i, node) { return '#aaa'; },
+                      vLineColor: function(i, node) { return '#aaa'; },
+                      paddingLeft: function(i, node) { return 8; },
+                      paddingRight: function(i, node) { return 8; },
+                      paddingTop: function(i, node) { return 6; },
+                      paddingBottom: function(i, node) { return 6; }
+                  }
+              },
+              // Tổng tiền
+              {
+                  text: `Tổng chi phí: ${totalAmount.toLocaleString('vi-VN')} đ`,
+                  alignment: 'right',
+                  margin: [0, 15, 0, 0],
+                  fontSize: 12,
+                  bold: true
+              }
+          ],
+
+          styles: {
+              tableHeader: {
+                  fontSize: 11,
+                  alignment: 'center',
+                  fillColor: '#f5f5f5',
+                  bold: true
+              }
+          },
+
+          defaultStyle: {
+              fontSize: 10
+          }
+      };
+
+      // Tạo và tải PDF
+      pdfMake.createPdf(docDefinition).download('bao-cao-chi-phi.pdf');
+
+  } catch (error) {
+      console.error('Lỗi khi tạo PDF:', error);
+      alert('Có lỗi xảy ra khi tạo PDF. Vui lòng thử lại.');
+  }
+}

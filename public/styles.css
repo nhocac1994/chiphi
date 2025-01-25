@@ -96,7 +96,8 @@ td {
 }
 
 tbody tr:hover {
-  background-color: #fafafa;
+  background-color: #FFF9C4;
+  transition: background-color 0.3s ease;
 }
 
 /* Tổng kết */
@@ -217,15 +218,6 @@ tbody tr:hover {
 
 
 
-.modal-preview.show {
-  display: flex;
-  animation: fadeIn 0.3s ease;
-}
-
-#imagePreview.show {
-  opacity: 1;
-}
-
 /* Container A4 */
 .report-container {
   width: min(calc(100% - 10px), 21cm);
@@ -282,18 +274,6 @@ body {
   .signature-box {
       padding: 5px;
   }
-  #imagePreview {
-    max-width: 65vw; /* Tăng kích thước trên mobile */
-    max-height: 30vh;
-    margin: 0;
-    padding: 0;
-    margin-left: 200px;
-}
-
-.modal-preview {
-    padding: 10px;
-
-}
 }
 
 /* Cho màn hình nhỏ hơn */
@@ -358,9 +338,6 @@ body {
   to { opacity: 1; }
 }
 
-.modal-preview.show {
-  animation: fadeIn 0.3s ease-in-out;
-}
 /* PDF Optimization */
 @media print {
   .report-container {
@@ -422,57 +399,87 @@ body {
   }
 }
 
-/* Style cho Modal hình ảnh */
+
+
+
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
+  padding: 0; /* Bỏ padding để ảnh có thể full màn hình */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.9);
-  overflow: hidden;
-}
-
-.modal-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  overflow: hidden; /* Thay đổi thành hidden */
 }
 
 .modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 90%;
-  max-height: 90vh;
-  width: auto;
+  margin: auto;
+  display: block;
+  width: 100%;
   height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 140px); /* Trừ đi khoảng trống cho controls */
   object-fit: contain;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
-.close {
-  position: fixed; /* Thay đổi thành fixed */
-  right: 20px;
-  top: 20px;
-  color: #f1f1f1;
-  font-size: 35px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1002;
-  width: 40px;
-  height: 40px;
+.modal-container {
+  width: 400px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: auto;
+  position: relative;
 }
 
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .modal-container {
+    width: 100%; /* Tăng chiều rộng trên mobile */
+    height: 100%;
+  }
+
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Đảm bảo ảnh không bị méo */
+  }
+
+  .modal-controls {
+    bottom: 30px; /* Điều chỉnh vị trí controls */
+  }
+}
+/* Portrait mode - điện thoại dọc */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .modal-container {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-height: 70vh;
+  }
+}
+
+/* Landscape mode - điện thoại ngang */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .modal-container {
+    padding: 10px 20px;
+  }
+  
+  .modal-content {
+    max-height: 85vh;
+  }
+}
+
+/* Controls cho mobile */
 .modal-controls {
   position: fixed;
   bottom: 20px;
@@ -486,64 +493,67 @@ body {
   z-index: 1001;
 }
 
-/* Mobile styles */
-@media screen and (max-width: 768px) {
-  .modal-content {
-    max-width: 95%;
-    max-height: 80vh;
-  }
-
-  .close {
-    right: 10px;
-    top: 10px;
-    font-size: 30px;
-  }
-
-  .modal-controls {
-    bottom: 15px;
-    padding: 12px 20px;
-  }
+.control-btn {
+  color: white;
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
+
+.control-btn:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.95);
+}
+
+.close {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+
 
 /* Thêm class cho trạng thái zoom */
 .modal-content.zoomed {
-  transition: transform 0.3s ease;
+  cursor: move;
 }
 
 /* Animation */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .modal.fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Style cho hàng trong bảng có hình ảnh */
-tr[data-hinh-anh] {
-  cursor: pointer;
+
+
+/* Thêm hiệu ứng loading */
+.modal-content.loading {
+  opacity: 0.5;
 }
 
-tr[data-hinh-anh]:hover {
-  background-color: #f5f5f5;
-}
-
-/* Loading indicator */
-.modal-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 16px;
-  display: none;
-}
-
-.modal-loading.show {
-  display: block;
+/* Tối ưu hiệu năng */
+.modal-content {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
